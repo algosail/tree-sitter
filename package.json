@@ -1,6 +1,6 @@
 {
   "name": "@algosail/tree-sitter",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Tree-sitter grammar for the Sail language",
   "main": "bindings/node",
   "types": "bindings/node",
@@ -8,7 +8,8 @@
     "build:wasm": "tree-sitter build --wasm",
     "build:native": "node-gyp rebuild",
     "generate": "tree-sitter generate",
-    "install": "echo 'Skipping native build. Run npm run build:native manually if needed.'"
+    "install": "echo 'Skipping native build. Run npm run build:native manually if needed.'",
+    "playground": "tree-sitter playground"
   },
   "devDependencies": {
     "node-addon-api": "^8.6.0",

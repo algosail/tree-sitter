@@ -18,10 +18,6 @@
         },
         {
           "type": "SYMBOL",
-          "name": "module_def"
-        },
-        {
-          "type": "SYMBOL",
           "name": "import_decl"
         },
         {
@@ -64,20 +60,20 @@
       ]
     },
     "comment_content": {
-      "type": "PATTERN",
-      "value": "[^()]+"
-    },
-    "module_def": {
-      "type": "FIELD",
-      "name": "name",
+      "type": "REPEAT1",
       "content": {
-        "type": "SYMBOL",
-        "name": "module_name"
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "PATTERN",
+            "value": "[^()]+"
+          },
+          {
+            "type": "SYMBOL",
+            "name": "comment"
+          }
+        ]
       }
-    },
-    "module_name": {
-      "type": "PATTERN",
-      "value": "![A-Z][a-zA-Z0-9_]*"
     },
     "import_decl": {
       "type": "SEQ",
@@ -101,19 +97,55 @@
       ]
     },
     "import_path": {
-      "type": "PATTERN",
-      "value": "\\|[^\\s]+"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "+"
+        },
+        {
+          "type": "FIELD",
+          "name": "url",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[^\\s]+"
+            },
+            "named": true,
+            "value": "url"
+          }
+        }
+      ]
     },
     "module_alias": {
-      "type": "PATTERN",
-      "value": "~[A-Z][a-zA-Z0-9_]*"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "~"
+        },
+        {
+          "type": "FIELD",
+          "name": "module",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[A-Z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "module_ref"
+          }
+        }
+      ]
     },
     "tag_group": {
       "type": "SEQ",
       "members": [
         {
           "type": "FIELD",
-          "name": "name",
+          "name": "name_def",
           "content": {
             "type": "SYMBOL",
             "name": "tag_group_name"
@@ -127,6 +159,22 @@
           }
         },
         {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "doc",
+              "content": {
+                "type": "SYMBOL",
+                "name": "comment"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
           "type": "REPEAT",
           "content": {
             "type": "SYMBOL",
@@ -136,43 +184,120 @@
       ]
     },
     "tag_group_name": {
-      "type": "PATTERN",
-      "value": "&[A-Z][a-zA-Z0-9_]*"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "&"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[A-Z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "group_ref"
+          }
+        }
+      ]
     },
     "tag_def": {
       "type": "SEQ",
       "members": [
         {
           "type": "FIELD",
-          "name": "name",
+          "name": "name_def",
           "content": {
             "type": "SYMBOL",
             "name": "tag_name"
           }
         },
         {
-          "type": "REPEAT",
-          "content": {
-            "type": "SYMBOL",
-            "name": "type_variable"
-          }
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "type_param",
+              "content": {
+                "type": "SYMBOL",
+                "name": "type_variable"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "doc",
+              "content": {
+                "type": "SYMBOL",
+                "name": "comment"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
     "tag_name": {
-      "type": "PATTERN",
-      "value": ">[A-Z][a-zA-Z0-9_]*"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "#"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[A-Z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "tag_ref"
+          }
+        }
+      ]
     },
     "map_def": {
       "type": "SEQ",
       "members": [
         {
           "type": "FIELD",
-          "name": "name",
+          "name": "name_def",
           "content": {
             "type": "SYMBOL",
             "name": "map_name"
           }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "doc",
+              "content": {
+                "type": "SYMBOL",
+                "name": "comment"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "REPEAT",
@@ -184,8 +309,26 @@
       ]
     },
     "map_name": {
-      "type": "PATTERN",
-      "value": "%[A-Z][a-zA-Z0-9_]*"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "$"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[A-Z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "map_ref"
+          }
+        }
+      ]
     },
     "map_field": {
       "type": "SEQ",
@@ -205,12 +348,46 @@
             "type": "SYMBOL",
             "name": "type_name"
           }
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "doc",
+              "content": {
+                "type": "SYMBOL",
+                "name": "comment"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         }
       ]
     },
     "map_field_name": {
-      "type": "PATTERN",
-      "value": ":[a-z][a-zA-Z0-9_]*"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "."
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[a-z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "field_ref"
+          }
+        }
+      ]
     },
     "word_def": {
       "type": "PREC_RIGHT",
@@ -220,7 +397,7 @@
         "members": [
           {
             "type": "FIELD",
-            "name": "name",
+            "name": "name_def",
             "content": {
               "type": "SYMBOL",
               "name": "word_name"
@@ -245,8 +422,26 @@
       }
     },
     "word_name": {
-      "type": "PATTERN",
-      "value": "@[a-z][a-zA-Z0-9_]*"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "@"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[a-z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "word_ref"
+          }
+        }
+      ]
     },
     "signature": {
       "type": "SEQ",
@@ -371,16 +566,70 @@
       ]
     },
     "effect_add": {
-      "type": "PATTERN",
-      "value": "\\+[A-Z][a-zA-Z0-9_]*"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "+"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[A-Z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "effect_ref"
+          }
+        }
+      ]
     },
     "effect_remove": {
-      "type": "PATTERN",
-      "value": "-[A-Z][a-zA-Z0-9_]*"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "-"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[A-Z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "effect_ref"
+          }
+        }
+      ]
     },
     "spread": {
-      "type": "PATTERN",
-      "value": "\\.\\.[a-zA-Z][a-zA-Z0-9_]*"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": ".."
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[a-zA-Z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "spread_ref"
+          }
+        }
+      ]
     },
     "type_name": {
       "type": "PATTERN",
@@ -411,7 +660,15 @@
         },
         {
           "type": "SYMBOL",
-          "name": "module_call"
+          "name": "module_word_call"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "module_tag_constructor"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "module_map_access"
         },
         {
           "type": "SYMBOL",
@@ -427,6 +684,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "default_pattern"
+        },
+        {
+          "type": "SYMBOL",
           "name": "slot_push"
         },
         {
@@ -439,11 +700,7 @@
         },
         {
           "type": "SYMBOL",
-          "name": "number"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "identifier"
+          "name": "raw_value"
         }
       ]
     },
@@ -560,44 +817,309 @@
       }
     },
     "word_call": {
-      "type": "PATTERN",
-      "value": "\\/[a-z][a-zA-Z0-9_]*"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "/"
+        },
+        {
+          "type": "FIELD",
+          "name": "word",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[a-z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "word_ref"
+          }
+        }
+      ]
     },
-    "module_call": {
-      "type": "PATTERN",
-      "value": "~[A-Z][a-zA-Z0-9_]*(\\/[a-zA-Z][a-zA-Z0-9_]*)?"
+    "module_word_call": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "~"
+        },
+        {
+          "type": "FIELD",
+          "name": "module",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[A-Z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "module_ref"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "/"
+        },
+        {
+          "type": "FIELD",
+          "name": "word",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[a-z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "word_ref"
+          }
+        }
+      ]
+    },
+    "module_tag_constructor": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "~"
+        },
+        {
+          "type": "FIELD",
+          "name": "module",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[A-Z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "module_ref"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "#"
+        },
+        {
+          "type": "FIELD",
+          "name": "tag",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[A-Z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "tag_ref"
+          }
+        }
+      ]
+    },
+    "module_map_access": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "~"
+        },
+        {
+          "type": "FIELD",
+          "name": "module",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[A-Z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "module_ref"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ","
+        },
+        {
+          "type": "FIELD",
+          "name": "map",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[A-Z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "map_ref"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "."
+        },
+        {
+          "type": "FIELD",
+          "name": "field",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[a-z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "field_ref"
+          }
+        }
+      ]
     },
     "map_access": {
-      "type": "PATTERN",
-      "value": "\\*[A-Z][a-zA-Z0-9_]*\\/[a-z][a-zA-Z0-9_]*"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": ","
+        },
+        {
+          "type": "FIELD",
+          "name": "map",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[A-Z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "map_ref"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "."
+        },
+        {
+          "type": "FIELD",
+          "name": "field",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[a-z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "field_ref"
+          }
+        }
+      ]
     },
     "tag_constructor": {
-      "type": "PATTERN",
-      "value": "#[A-Z][a-zA-Z0-9_]*"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "#"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[A-Z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "tag_ref"
+          }
+        }
+      ]
     },
     "tag_pattern": {
-      "type": "PATTERN",
-      "value": "_[A-Z][a-zA-Z0-9_]*"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "_"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[A-Z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "tag_ref"
+          }
+        }
+      ]
+    },
+    "default_pattern": {
+      "type": "TOKEN",
+      "content": {
+        "type": "STRING",
+        "value": "_"
+      }
     },
     "slot_push": {
-      "type": "PATTERN",
-      "value": "\\.[a-z][a-zA-Z0-9_]*"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": ":"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[a-z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "slot_ref"
+          }
+        }
+      ]
     },
     "slot_pop": {
-      "type": "PATTERN",
-      "value": ",[a-z][a-zA-Z0-9_]*"
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": ";"
+        },
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "ALIAS",
+            "content": {
+              "type": "PATTERN",
+              "value": "[a-z][a-zA-Z0-9_]*"
+            },
+            "named": true,
+            "value": "slot_ref"
+          }
+        }
+      ]
     },
     "raw_string": {
       "type": "PATTERN",
       "value": "\\'[^\\']*\\'"
     },
-    "number": {
-      "type": "PATTERN",
-      "value": "[0-9]+(\\.[0-9]+)?"
-    },
-    "identifier": {
-      "type": "PATTERN",
-      "value": "[a-zA-Z_][a-zA-Z0-9_]*"
+    "raw_value": {
+      "type": "TOKEN",
+      "content": {
+        "type": "PREC",
+        "value": -1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[^\\s\\[\\]()']+"
+        }
+      }
     }
   },
   "extras": [
@@ -619,12 +1141,20 @@
       "word_def"
     ],
     [
-      "tag_def",
       "tag_group"
     ],
     [
-      "type_variable",
-      "identifier"
+      "tag_def"
+    ],
+    [
+      "map_def"
+    ],
+    [
+      "map_field"
+    ],
+    [
+      "tag_def",
+      "tag_group"
     ]
   ],
   "precedences": [],
