@@ -1,0 +1,633 @@
+{
+  "name": "sail",
+  "rules": {
+    "source_file": {
+      "type": "REPEAT",
+      "content": {
+        "type": "SYMBOL",
+        "name": "_top_level"
+      }
+    },
+    "_top_level": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "comment"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "module_def"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "import_decl"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "tag_group"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "map_def"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "word_def"
+        }
+      ]
+    },
+    "comment": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "comment_content"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
+    "comment_content": {
+      "type": "PATTERN",
+      "value": "[^()]+"
+    },
+    "module_def": {
+      "type": "FIELD",
+      "name": "name",
+      "content": {
+        "type": "SYMBOL",
+        "name": "module_name"
+      }
+    },
+    "module_name": {
+      "type": "PATTERN",
+      "value": "![A-Z][a-zA-Z0-9_]*"
+    },
+    "import_decl": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "path",
+          "content": {
+            "type": "SYMBOL",
+            "name": "import_path"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "alias",
+          "content": {
+            "type": "SYMBOL",
+            "name": "module_alias"
+          }
+        }
+      ]
+    },
+    "import_path": {
+      "type": "PATTERN",
+      "value": "\\|[^\\s]+"
+    },
+    "module_alias": {
+      "type": "PATTERN",
+      "value": "~[A-Z][a-zA-Z0-9_]*"
+    },
+    "tag_group": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "tag_group_name"
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "type_variable"
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "tag_def"
+          }
+        }
+      ]
+    },
+    "tag_group_name": {
+      "type": "PATTERN",
+      "value": "&[A-Z][a-zA-Z0-9_]*"
+    },
+    "tag_def": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "tag_name"
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "type_variable"
+          }
+        }
+      ]
+    },
+    "tag_name": {
+      "type": "PATTERN",
+      "value": ">[A-Z][a-zA-Z0-9_]*"
+    },
+    "map_def": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "map_name"
+          }
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "map_field"
+          }
+        }
+      ]
+    },
+    "map_name": {
+      "type": "PATTERN",
+      "value": "%[A-Z][a-zA-Z0-9_]*"
+    },
+    "map_field": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "FIELD",
+          "name": "key",
+          "content": {
+            "type": "SYMBOL",
+            "name": "map_field_name"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "type",
+          "content": {
+            "type": "SYMBOL",
+            "name": "type_name"
+          }
+        }
+      ]
+    },
+    "map_field_name": {
+      "type": "PATTERN",
+      "value": ":[a-z][a-zA-Z0-9_]*"
+    },
+    "word_def": {
+      "type": "PREC_RIGHT",
+      "value": 0,
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "FIELD",
+            "name": "name",
+            "content": {
+              "type": "SYMBOL",
+              "name": "word_name"
+            }
+          },
+          {
+            "type": "FIELD",
+            "name": "sig",
+            "content": {
+              "type": "SYMBOL",
+              "name": "signature"
+            }
+          },
+          {
+            "type": "REPEAT",
+            "content": {
+              "type": "SYMBOL",
+              "name": "_expr"
+            }
+          }
+        ]
+      }
+    },
+    "word_name": {
+      "type": "PATTERN",
+      "value": "@[a-z][a-zA-Z0-9_]*"
+    },
+    "signature": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_sig_item"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sig_arrow"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_sig_item"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
+    "sig_arrow": {
+      "type": "TOKEN",
+      "content": {
+        "type": "STRING",
+        "value": "--"
+      }
+    },
+    "_sig_item": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "effect_add"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "effect_remove"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "spread"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "type_name"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "type_variable"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sig_list"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sig_quotation"
+        }
+      ]
+    },
+    "sig_list": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "["
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_sig_item"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "]"
+        }
+      ]
+    },
+    "sig_quotation": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "("
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_sig_item"
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "sig_arrow"
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_sig_item"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
+    "effect_add": {
+      "type": "PATTERN",
+      "value": "\\+[A-Z][a-zA-Z0-9_]*"
+    },
+    "effect_remove": {
+      "type": "PATTERN",
+      "value": "-[A-Z][a-zA-Z0-9_]*"
+    },
+    "spread": {
+      "type": "PATTERN",
+      "value": "\\.\\.[a-zA-Z][a-zA-Z0-9_]*"
+    },
+    "type_name": {
+      "type": "PATTERN",
+      "value": "[A-Z][a-zA-Z0-9_]*"
+    },
+    "type_variable": {
+      "type": "PATTERN",
+      "value": "[a-z][a-zA-Z0-9_]*"
+    },
+    "_expr": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "comment"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "quotation"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "builtin_word"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "word_call"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "module_call"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "map_access"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "tag_constructor"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "tag_pattern"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "slot_push"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "slot_pop"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "raw_string"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "number"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        }
+      ]
+    },
+    "quotation": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "["
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_expr"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "]"
+        }
+      ]
+    },
+    "builtin_word": {
+      "type": "TOKEN",
+      "content": {
+        "type": "CHOICE",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "DUP"
+          },
+          {
+            "type": "STRING",
+            "value": "SWAP"
+          },
+          {
+            "type": "STRING",
+            "value": "DROP"
+          },
+          {
+            "type": "STRING",
+            "value": "OVER"
+          },
+          {
+            "type": "STRING",
+            "value": "ROT"
+          },
+          {
+            "type": "STRING",
+            "value": "ROTR"
+          },
+          {
+            "type": "STRING",
+            "value": "NIP"
+          },
+          {
+            "type": "STRING",
+            "value": "TUCK"
+          },
+          {
+            "type": "STRING",
+            "value": "DUP2"
+          },
+          {
+            "type": "STRING",
+            "value": "DROP2"
+          },
+          {
+            "type": "STRING",
+            "value": "SWAP2"
+          },
+          {
+            "type": "STRING",
+            "value": "CALL"
+          },
+          {
+            "type": "STRING",
+            "value": "MATCH"
+          },
+          {
+            "type": "STRING",
+            "value": "COMPOSE"
+          },
+          {
+            "type": "STRING",
+            "value": "IF"
+          },
+          {
+            "type": "STRING",
+            "value": "MAP"
+          },
+          {
+            "type": "STRING",
+            "value": "GETL"
+          },
+          {
+            "type": "STRING",
+            "value": "SETL"
+          },
+          {
+            "type": "STRING",
+            "value": "UPDL"
+          },
+          {
+            "type": "STRING",
+            "value": "APP"
+          },
+          {
+            "type": "STRING",
+            "value": "ERROR"
+          }
+        ]
+      }
+    },
+    "word_call": {
+      "type": "PATTERN",
+      "value": "\\/[a-z][a-zA-Z0-9_]*"
+    },
+    "module_call": {
+      "type": "PATTERN",
+      "value": "~[A-Z][a-zA-Z0-9_]*(\\/[a-zA-Z][a-zA-Z0-9_]*)?"
+    },
+    "map_access": {
+      "type": "PATTERN",
+      "value": "\\*[A-Z][a-zA-Z0-9_]*\\/[a-z][a-zA-Z0-9_]*"
+    },
+    "tag_constructor": {
+      "type": "PATTERN",
+      "value": "#[A-Z][a-zA-Z0-9_]*"
+    },
+    "tag_pattern": {
+      "type": "PATTERN",
+      "value": "_[A-Z][a-zA-Z0-9_]*"
+    },
+    "slot_push": {
+      "type": "PATTERN",
+      "value": "\\.[a-z][a-zA-Z0-9_]*"
+    },
+    "slot_pop": {
+      "type": "PATTERN",
+      "value": ",[a-z][a-zA-Z0-9_]*"
+    },
+    "raw_string": {
+      "type": "PATTERN",
+      "value": "\\'[^\\']*\\'"
+    },
+    "number": {
+      "type": "PATTERN",
+      "value": "[0-9]+(\\.[0-9]+)?"
+    },
+    "identifier": {
+      "type": "PATTERN",
+      "value": "[a-zA-Z_][a-zA-Z0-9_]*"
+    }
+  },
+  "extras": [
+    {
+      "type": "PATTERN",
+      "value": "\\s+"
+    }
+  ],
+  "conflicts": [
+    [
+      "comment",
+      "signature"
+    ],
+    [
+      "comment",
+      "sig_quotation"
+    ],
+    [
+      "word_def"
+    ],
+    [
+      "tag_def",
+      "tag_group"
+    ],
+    [
+      "type_variable",
+      "identifier"
+    ]
+  ],
+  "precedences": [],
+  "externals": [],
+  "inline": [],
+  "supertypes": []
+}

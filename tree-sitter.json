@@ -1,0 +1,15 @@
+{
+  "metadata": {
+    "version": "0.1.0"
+  },
+  "grammars": [
+    {
+      "name": "sail",
+      "camelcase": "Sail",
+      "scope": "source.sail",
+      "file-types": ["sail"],
+      "highlights": "queries/highlights.scm",
+      "injection-regex": "^sail$"
+    }
+  ]
+}

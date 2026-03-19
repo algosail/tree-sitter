@@ -1,0 +1,56 @@
+{
+  "name": "@algosail/tree-sitter",
+  "version": "0.1.0",
+  "description": "Tree-sitter grammar for the Sail language",
+  "main": "bindings/node",
+  "types": "bindings/node",
+  "scripts": {
+    "build": "node-gyp rebuild",
+    "generate": "tree-sitter generate",
+    "install": "node-gyp-build",
+    "prebuildify": "prebuildify --napi --strip"
+  },
+  "dependencies": {
+    "node-addon-api": "^7.1.0",
+    "node-gyp-build": "^4.8.0"
+  },
+  "peerDependencies": {
+    "tree-sitter": "^0.21.0"
+  },
+  "peerDependenciesMeta": {
+    "tree_sitter": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "tree-sitter-cli": "^0.22.0",
+    "prebuildify": "^6.0.0"
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.sail",
+      "file-types": [
+        "sail"
+      ],
+      "highlights": "queries/highlights.scm"
+    }
+  ],
+  "author": "algosail",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/algosail/tree-sitter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/algosail/tree-sitter/issues"
+  },
+  "homepage": "https://github.com/algosail/tree-sitter#readme",
+  "license": "MIT",
+  "files": [
+    "grammar.js",
+    "binding.gyp",
+    "prebuilds/**",
+    "bindings/node/*",
+    "queries/*",
+    "src/**"
+  ]
+}

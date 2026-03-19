@@ -1,0 +1,594 @@
+[
+  {
+    "type": "comment",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "comment_content",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "import_decl",
+    "named": true,
+    "fields": {
+      "alias": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "module_alias",
+            "named": true
+          }
+        ]
+      },
+      "path": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "import_path",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "map_def",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "map_name",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "map_field",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "map_field",
+    "named": true,
+    "fields": {
+      "key": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "map_field_name",
+            "named": true
+          }
+        ]
+      },
+      "type": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_name",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "module_def",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "module_name",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "quotation",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "builtin_word",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "map_access",
+          "named": true
+        },
+        {
+          "type": "module_call",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "quotation",
+          "named": true
+        },
+        {
+          "type": "raw_string",
+          "named": true
+        },
+        {
+          "type": "slot_pop",
+          "named": true
+        },
+        {
+          "type": "slot_push",
+          "named": true
+        },
+        {
+          "type": "tag_constructor",
+          "named": true
+        },
+        {
+          "type": "tag_pattern",
+          "named": true
+        },
+        {
+          "type": "word_call",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sig_list",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "effect_add",
+          "named": true
+        },
+        {
+          "type": "effect_remove",
+          "named": true
+        },
+        {
+          "type": "sig_list",
+          "named": true
+        },
+        {
+          "type": "sig_quotation",
+          "named": true
+        },
+        {
+          "type": "spread",
+          "named": true
+        },
+        {
+          "type": "type_name",
+          "named": true
+        },
+        {
+          "type": "type_variable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "sig_quotation",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "effect_add",
+          "named": true
+        },
+        {
+          "type": "effect_remove",
+          "named": true
+        },
+        {
+          "type": "sig_arrow",
+          "named": true
+        },
+        {
+          "type": "sig_list",
+          "named": true
+        },
+        {
+          "type": "sig_quotation",
+          "named": true
+        },
+        {
+          "type": "spread",
+          "named": true
+        },
+        {
+          "type": "type_name",
+          "named": true
+        },
+        {
+          "type": "type_variable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "signature",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "effect_add",
+          "named": true
+        },
+        {
+          "type": "effect_remove",
+          "named": true
+        },
+        {
+          "type": "sig_arrow",
+          "named": true
+        },
+        {
+          "type": "sig_list",
+          "named": true
+        },
+        {
+          "type": "sig_quotation",
+          "named": true
+        },
+        {
+          "type": "spread",
+          "named": true
+        },
+        {
+          "type": "type_name",
+          "named": true
+        },
+        {
+          "type": "type_variable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "source_file",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "import_decl",
+          "named": true
+        },
+        {
+          "type": "map_def",
+          "named": true
+        },
+        {
+          "type": "module_def",
+          "named": true
+        },
+        {
+          "type": "tag_group",
+          "named": true
+        },
+        {
+          "type": "word_def",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "tag_def",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "tag_name",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "type_variable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "tag_group",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "tag_group_name",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "tag_def",
+          "named": true
+        },
+        {
+          "type": "type_variable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "word_def",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "word_name",
+            "named": true
+          }
+        ]
+      },
+      "sig": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "signature",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "builtin_word",
+          "named": true
+        },
+        {
+          "type": "comment",
+          "named": true
+        },
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "map_access",
+          "named": true
+        },
+        {
+          "type": "module_call",
+          "named": true
+        },
+        {
+          "type": "number",
+          "named": true
+        },
+        {
+          "type": "quotation",
+          "named": true
+        },
+        {
+          "type": "raw_string",
+          "named": true
+        },
+        {
+          "type": "slot_pop",
+          "named": true
+        },
+        {
+          "type": "slot_push",
+          "named": true
+        },
+        {
+          "type": "tag_constructor",
+          "named": true
+        },
+        {
+          "type": "tag_pattern",
+          "named": true
+        },
+        {
+          "type": "word_call",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "(",
+    "named": false
+  },
+  {
+    "type": ")",
+    "named": false
+  },
+  {
+    "type": "[",
+    "named": false
+  },
+  {
+    "type": "]",
+    "named": false
+  },
+  {
+    "type": "builtin_word",
+    "named": true
+  },
+  {
+    "type": "comment_content",
+    "named": true
+  },
+  {
+    "type": "effect_add",
+    "named": true
+  },
+  {
+    "type": "effect_remove",
+    "named": true
+  },
+  {
+    "type": "identifier",
+    "named": true
+  },
+  {
+    "type": "import_path",
+    "named": true
+  },
+  {
+    "type": "map_access",
+    "named": true
+  },
+  {
+    "type": "map_field_name",
+    "named": true
+  },
+  {
+    "type": "map_name",
+    "named": true
+  },
+  {
+    "type": "module_alias",
+    "named": true
+  },
+  {
+    "type": "module_call",
+    "named": true
+  },
+  {
+    "type": "module_name",
+    "named": true
+  },
+  {
+    "type": "number",
+    "named": true
+  },
+  {
+    "type": "raw_string",
+    "named": true
+  },
+  {
+    "type": "sig_arrow",
+    "named": true
+  },
+  {
+    "type": "slot_pop",
+    "named": true
+  },
+  {
+    "type": "slot_push",
+    "named": true
+  },
+  {
+    "type": "spread",
+    "named": true
+  },
+  {
+    "type": "tag_constructor",
+    "named": true
+  },
+  {
+    "type": "tag_group_name",
+    "named": true
+  },
+  {
+    "type": "tag_name",
+    "named": true
+  },
+  {
+    "type": "tag_pattern",
+    "named": true
+  },
+  {
+    "type": "type_name",
+    "named": true
+  },
+  {
+    "type": "type_variable",
+    "named": true
+  },
+  {
+    "type": "word_call",
+    "named": true
+  },
+  {
+    "type": "word_name",
+    "named": true
+  }
+]
