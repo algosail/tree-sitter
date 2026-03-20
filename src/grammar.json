@@ -522,10 +522,14 @@
             ]
           },
           {
-            "type": "REPEAT",
+            "type": "FIELD",
+            "name": "body",
             "content": {
-              "type": "SYMBOL",
-              "name": "_expr"
+              "type": "REPEAT",
+              "content": {
+                "type": "SYMBOL",
+                "name": "_expr"
+              }
             }
           }
         ]

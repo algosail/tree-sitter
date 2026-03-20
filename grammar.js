@@ -141,7 +141,7 @@ module.exports = grammar({
           field('name_def', $.word_def),
           field('sig', $.signature),
           optional(field('doc', $.comment)),
-          repeat($._expr),
+          field('body', repeat($._expr)),
         ),
       ),
 

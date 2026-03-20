@@ -565,6 +565,72 @@
     "type": "word",
     "named": true,
     "fields": {
+      "body": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "builtin_word",
+            "named": true
+          },
+          {
+            "type": "comment",
+            "named": true
+          },
+          {
+            "type": "default_pattern",
+            "named": true
+          },
+          {
+            "type": "field_ref",
+            "named": true
+          },
+          {
+            "type": "module_field_ref",
+            "named": true
+          },
+          {
+            "type": "module_tag_ref",
+            "named": true
+          },
+          {
+            "type": "module_word_ref",
+            "named": true
+          },
+          {
+            "type": "quotation",
+            "named": true
+          },
+          {
+            "type": "raw_string",
+            "named": true
+          },
+          {
+            "type": "raw_value",
+            "named": true
+          },
+          {
+            "type": "slot_pop",
+            "named": true
+          },
+          {
+            "type": "slot_push",
+            "named": true
+          },
+          {
+            "type": "tag_pattern",
+            "named": true
+          },
+          {
+            "type": "tag_ref",
+            "named": true
+          },
+          {
+            "type": "word_ref",
+            "named": true
+          }
+        ]
+      },
       "doc": {
         "multiple": false,
         "required": false,
@@ -595,72 +661,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "builtin_word",
-          "named": true
-        },
-        {
-          "type": "comment",
-          "named": true
-        },
-        {
-          "type": "default_pattern",
-          "named": true
-        },
-        {
-          "type": "field_ref",
-          "named": true
-        },
-        {
-          "type": "module_field_ref",
-          "named": true
-        },
-        {
-          "type": "module_tag_ref",
-          "named": true
-        },
-        {
-          "type": "module_word_ref",
-          "named": true
-        },
-        {
-          "type": "quotation",
-          "named": true
-        },
-        {
-          "type": "raw_string",
-          "named": true
-        },
-        {
-          "type": "raw_value",
-          "named": true
-        },
-        {
-          "type": "slot_pop",
-          "named": true
-        },
-        {
-          "type": "slot_push",
-          "named": true
-        },
-        {
-          "type": "tag_pattern",
-          "named": true
-        },
-        {
-          "type": "tag_ref",
-          "named": true
-        },
-        {
-          "type": "word_ref",
-          "named": true
-        }
-      ]
     }
   },
   {
