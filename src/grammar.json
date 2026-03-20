@@ -101,6 +101,10 @@
       "type": "PATTERN",
       "value": "~[A-Z][a-zA-Z0-9_]*#[A-Z][a-zA-Z0-9_]*"
     },
+    "module_tag_pattern": {
+      "type": "PATTERN",
+      "value": "~[A-Z][a-zA-Z0-9_]*\\_[A-Z][a-zA-Z0-9_]*"
+    },
     "module_map_ref": {
       "type": "PATTERN",
       "value": "~[A-Z][a-zA-Z0-9_]*\\$[A-Z][a-zA-Z0-9_]*"
@@ -133,11 +137,11 @@
       "type": "PATTERN",
       "value": "\\-[A-Z][a-zA-Z0-9_]*"
     },
-    "slot_push": {
+    "slot_write": {
       "type": "PATTERN",
       "value": ":[a-z][a-zA-Z0-9_]*"
     },
-    "slot_pop": {
+    "slot_read": {
       "type": "PATTERN",
       "value": ";[a-z][a-zA-Z0-9_]*"
     },
@@ -706,6 +710,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "module_tag_pattern"
+        },
+        {
+          "type": "SYMBOL",
           "name": "default_pattern"
         },
         {
@@ -718,11 +726,11 @@
         },
         {
           "type": "SYMBOL",
-          "name": "slot_push"
+          "name": "slot_write"
         },
         {
           "type": "SYMBOL",
-          "name": "slot_pop"
+          "name": "slot_read"
         },
         {
           "type": "SYMBOL",

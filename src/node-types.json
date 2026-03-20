@@ -280,6 +280,10 @@
           "named": true
         },
         {
+          "type": "module_tag_pattern",
+          "named": true
+        },
+        {
           "type": "module_tag_ref",
           "named": true
         },
@@ -300,11 +304,11 @@
           "named": true
         },
         {
-          "type": "slot_pop",
+          "type": "slot_read",
           "named": true
         },
         {
-          "type": "slot_push",
+          "type": "slot_write",
           "named": true
         },
         {
@@ -590,6 +594,10 @@
             "named": true
           },
           {
+            "type": "module_tag_pattern",
+            "named": true
+          },
+          {
             "type": "module_tag_ref",
             "named": true
           },
@@ -610,11 +618,11 @@
             "named": true
           },
           {
-            "type": "slot_pop",
+            "type": "slot_read",
             "named": true
           },
           {
-            "type": "slot_push",
+            "type": "slot_write",
             "named": true
           },
           {
@@ -712,6 +720,10 @@
     "named": true
   },
   {
+    "type": "module_tag_pattern",
+    "named": true
+  },
+  {
     "type": "module_tag_ref",
     "named": true
   },
@@ -736,11 +748,11 @@
     "named": true
   },
   {
-    "type": "slot_pop",
+    "type": "slot_read",
     "named": true
   },
   {
-    "type": "slot_push",
+    "type": "slot_write",
     "named": true
   },
   {

@@ -57,6 +57,8 @@ module.exports = grammar({
     module_group_ref: ($) => /~[A-Z][a-zA-Z0-9_]*&[A-Z][a-zA-Z0-9_]*/,
     // ~Module#Tag
     module_tag_ref: ($) => /~[A-Z][a-zA-Z0-9_]*#[A-Z][a-zA-Z0-9_]*/,
+    // ~Module#Tag
+    module_tag_pattern: ($) => /~[A-Z][a-zA-Z0-9_]*\_[A-Z][a-zA-Z0-9_]*/,
     // ~Module$Map
     module_map_ref: ($) => /~[A-Z][a-zA-Z0-9_]*\$[A-Z][a-zA-Z0-9_]*/,
     // ~Module$Map.field
@@ -77,10 +79,10 @@ module.exports = grammar({
     effect_remove: ($) => /\-[A-Z][a-zA-Z0-9_]*/,
 
     // :name
-    slot_push: ($) => /:[a-z][a-zA-Z0-9_]*/,
+    slot_write: ($) => /:[a-z][a-zA-Z0-9_]*/,
 
     // ;name
-    slot_pop: ($) => /;[a-z][a-zA-Z0-9_]*/,
+    slot_read: ($) => /;[a-z][a-zA-Z0-9_]*/,
 
     // 'raw string literal'
     raw_string: ($) => /\'[^\']*\'/,
@@ -180,11 +182,12 @@ module.exports = grammar({
         $.tag_ref,
         $.module_tag_ref,
         $.tag_pattern,
+        $.module_tag_pattern,
         $.default_pattern,
         $.field_ref,
         $.module_field_ref,
-        $.slot_push,
-        $.slot_pop,
+        $.slot_write,
+        $.slot_read,
         $.raw_string,
         $.raw_value,
       ),
