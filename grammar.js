@@ -1,32 +1,22 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
-const UPPERNAME = /[A-Z][a-zA-Z0-9_]*/
-const LOWERNAME = /[a-z][a-zA-Z0-9_]*/
-
 module.exports = grammar({
   name: 'sail',
 
   extras: ($) => [/\s+/],
 
   conflicts: ($) => [
-    [$.comment, $.signature],
-    [$.comment, $.sig_quotation],
-
-    [$.module_def, $.module_ref],
-    [$.group_def, $.group_ref],
-    [$.tag_def, $.tag_ref],
-    [$.map_def, $.map_ref],
-    [$.field_def, $.field_ref],
-
+    // GLR self-conflicts: after the rule's main tokens, '(' is ambiguous —
+    // it could be the doc comment for THIS node or the start of the NEXT
+    // top-level construct. Cannot be resolved by LALR(1).
     [$.group],
     [$.tag],
     [$.map],
     [$.field],
-    [$.word],
 
-    [$.group_def],
-    [$.tag, $.group],
+    // After word_def + sig + optional(doc), a comment is ambiguous:
+    // it could be the doc field OR an _expr in the body.
     [$.word, $._expr],
   ],
 
@@ -35,7 +25,7 @@ module.exports = grammar({
     _top_level: ($) => choice($.comment, $.import, $.group, $.map, $.word),
 
     // ~Module
-    module_def: ($) => /~[A-Z][a-zA-Z0-9_]*/,
+    module_def: ($) => /\+[A-Z][a-zA-Z0-9_]*/,
     // ~Module
     module_ref: ($) => /~[A-Z][a-zA-Z0-9_]*/,
     // &Group
@@ -107,9 +97,9 @@ module.exports = grammar({
     comment: ($) => seq('(', optional($.comment_content), ')'),
     comment_content: ($) => repeat1(choice(/[^()]+/, $.comment)),
 
-    // Import:  +path/or/+pkg  Alias
-    import: ($) => seq(field('path', $.path), field('module', $.module_def)),
-    path: ($) => /\+[^\s]+/,
+    // Import:  +Alias path/or/+pkg
+    import: ($) => seq(field('module', $.module_def), field('path', $.path)),
+    path: ($) => /[^\s]+/,
     // seq('+', field('url', alias(/[^\s]+/, $.url))),
 
     // Tag group:  &Name typeParam*  (#TagCase typeParam*)*
@@ -127,11 +117,8 @@ module.exports = grammar({
         optional(field('doc', $.comment)),
       ),
     group_type: ($) =>
-      seq(
-        field('group', choice($.group_ref, $.module_group_ref)),
-        optional(field('params', $._generic)),
-      ),
-    _generic: ($) => seq('{', repeat($._generic_content), '}'),
+      seq(field('group', choice($.group_ref, $.module_group_ref)), optional($._generic)),
+    _generic: ($) => seq('{', field('params', repeat($._generic_content)), '}'),
     _generic_content: ($) => choice($.type, $.group_type, $.map_ref, $.module_map_ref),
 
     // Map definition:  %Name  (.field Type)*

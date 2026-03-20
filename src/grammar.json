@@ -36,7 +36,7 @@
     },
     "module_def": {
       "type": "PATTERN",
-      "value": "~[A-Z][a-zA-Z0-9_]*"
+      "value": "\\+[A-Z][a-zA-Z0-9_]*"
     },
     "module_ref": {
       "type": "PATTERN",
@@ -202,25 +202,25 @@
       "members": [
         {
           "type": "FIELD",
-          "name": "path",
-          "content": {
-            "type": "SYMBOL",
-            "name": "path"
-          }
-        },
-        {
-          "type": "FIELD",
           "name": "module",
           "content": {
             "type": "SYMBOL",
             "name": "module_def"
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "path",
+          "content": {
+            "type": "SYMBOL",
+            "name": "path"
           }
         }
       ]
     },
     "path": {
       "type": "PATTERN",
-      "value": "\\+[^\\s]+"
+      "value": "[^\\s]+"
     },
     "group": {
       "type": "SEQ",
@@ -334,12 +334,8 @@
           "type": "CHOICE",
           "members": [
             {
-              "type": "FIELD",
-              "name": "params",
-              "content": {
-                "type": "SYMBOL",
-                "name": "_generic"
-              }
+              "type": "SYMBOL",
+              "name": "_generic"
             },
             {
               "type": "BLANK"
@@ -356,10 +352,14 @@
           "value": "{"
         },
         {
-          "type": "REPEAT",
+          "type": "FIELD",
+          "name": "params",
           "content": {
-            "type": "SYMBOL",
-            "name": "_generic_content"
+            "type": "REPEAT",
+            "content": {
+              "type": "SYMBOL",
+              "name": "_generic_content"
+            }
           }
         },
         {
@@ -851,34 +851,6 @@
   ],
   "conflicts": [
     [
-      "comment",
-      "signature"
-    ],
-    [
-      "comment",
-      "sig_quotation"
-    ],
-    [
-      "module_def",
-      "module_ref"
-    ],
-    [
-      "group_def",
-      "group_ref"
-    ],
-    [
-      "tag_def",
-      "tag_ref"
-    ],
-    [
-      "map_def",
-      "map_ref"
-    ],
-    [
-      "field_def",
-      "field_ref"
-    ],
-    [
       "group"
     ],
     [
@@ -889,16 +861,6 @@
     ],
     [
       "field"
-    ],
-    [
-      "word"
-    ],
-    [
-      "group_def"
-    ],
-    [
-      "tag",
-      "group"
     ],
     [
       "word",

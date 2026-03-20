@@ -30,6 +30,11 @@
     }
   },
   {
+    "type": "effect_add",
+    "named": true,
+    "fields": {}
+  },
+  {
     "type": "field",
     "named": true,
     "fields": {
@@ -164,14 +169,6 @@
           {
             "type": "type",
             "named": true
-          },
-          {
-            "type": "{",
-            "named": false
-          },
-          {
-            "type": "}",
-            "named": false
           }
         ]
       }
@@ -246,6 +243,11 @@
   },
   {
     "type": "map_ref",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "module_def",
     "named": true,
     "fields": {}
   },
@@ -686,10 +688,6 @@
     "named": true
   },
   {
-    "type": "effect_add",
-    "named": true
-  },
-  {
     "type": "effect_remove",
     "named": true
   },
@@ -699,10 +697,6 @@
   },
   {
     "type": "field_ref",
-    "named": true
-  },
-  {
-    "type": "module_def",
     "named": true
   },
   {
