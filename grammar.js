@@ -10,30 +10,96 @@ module.exports = grammar({
   extras: ($) => [/\s+/],
 
   conflicts: ($) => [
-    // '(' can start a comment OR a signature — tree-sitter resolves by
-    // looking for '--' inside.
     [$.comment, $.signature],
     [$.comment, $.sig_quotation],
-    // After word_def's signature, '(' is ambiguous: body comment vs next
-    // top-level item. Declare as GLR self-conflict so both are explored.
-    [$.word_def],
-    // After tag_group_name + type_variables, '(' is ambiguous: doc comment
-    // for this tag_group vs a top-level comment that follows it.
-    [$.tag_group],
-    [$.tag_def],
-    [$.map_def],
-    [$.map_field],
-    // tag_group contains tag_def children; both can follow an uppercase name
-    [$.tag_def, $.tag_group],
-    // module_alias and type_name are both /[A-Z][a-zA-Z0-9_]*/
-    // [$.type_name, $.module_alias],
-    // type_variable and identifier are both lowercase words
+
+    [$.module_def, $.module_ref],
+    [$.group_def, $.group_ref],
+    [$.tag_def, $.tag_ref],
+    [$.map_def, $.map_ref],
+    [$.field_def, $.field_ref],
+
+    [$.group],
+    [$.tag],
+    [$.map],
+    [$.field],
+    [$.word],
+
+    [$.group_def],
+    [$.tag, $.group],
+    [$.word, $._expr],
   ],
 
   rules: {
     source_file: ($) => repeat($._top_level),
+    _top_level: ($) => choice($.comment, $.import, $.group, $.map, $.word),
 
-    _top_level: ($) => choice($.comment, $.import_decl, $.tag_group, $.map_def, $.word_def),
+    // ~Module
+    module_def: ($) => /~[A-Z][a-zA-Z0-9_]*/,
+    // ~Module
+    module_ref: ($) => /~[A-Z][a-zA-Z0-9_]*/,
+    // &Group
+    group_def: ($) => /&[A-Z][a-zA-Z0-9_]*/,
+    // &Group
+    group_ref: ($) => /&[A-Z][a-zA-Z0-9_]*/,
+    // #Tag
+    tag_def: ($) => /#[A-Z][a-zA-Z0-9_]*/,
+    // #Tag
+    tag_ref: ($) => /#[A-Z][a-zA-Z0-9_]*/,
+    // _Tag
+    tag_pattern: ($) => /\_[A-Z][a-zA-Z0-9_]*/,
+    // _
+    default_pattern: ($) => token('_'),
+    // $Map
+    map_def: ($) => /\$[A-Z][a-zA-Z0-9_]*/,
+    // $Map
+    map_ref: ($) => /\$[A-Z][a-zA-Z0-9_]*/,
+    // .field
+    field_def: ($) => /\.[a-z][a-zA-Z0-9_]*/,
+    // $Map.field
+    field_ref: ($) => /\$[A-Z][a-zA-Z0-9_]*\.[a-z][a-zA-Z0-9_]*/,
+    // @word
+    word_def: ($) => /@[a-z][a-zA-Z0-9_]*/,
+    // /word
+    word_ref: ($) => /\/[a-z][a-zA-Z0-9_]*/,
+
+    // ~Module&Group
+    module_group_ref: ($) => /~[A-Z][a-zA-Z0-9_]*&[A-Z][a-zA-Z0-9_]*/,
+    // ~Module#Tag
+    module_tag_ref: ($) => /~[A-Z][a-zA-Z0-9_]*#[A-Z][a-zA-Z0-9_]*/,
+    // ~Module$Map
+    module_map_ref: ($) => /~[A-Z][a-zA-Z0-9_]*\$[A-Z][a-zA-Z0-9_]*/,
+    // ~Module$Map.field
+    module_field_ref: ($) => /~[A-Z][a-zA-Z0-9_]*\$[A-Z][a-zA-Z0-9_]*\.[a-z][a-zA-Z0-9_]*/,
+    // ~Module/word
+    module_word_ref: ($) => /~[A-Z][a-zA-Z0-9_]*\/[a-z][a-zA-Z0-9_]*/,
+
+    // Uppercase type: Int, Str, Maybe, List, etc.
+    type: ($) => /[A-Z][a-zA-Z0-9_]*/,
+    // Lowercase type variable: a, b, elem, etc.
+    type_var: ($) => /[a-z][a-zA-Z0-9_]*/,
+    // Lowercase type variable: a, b, elem, etc.
+    spread: ($) => /\.\.[a-z][a-zA-Z0-9_]*/,
+
+    // +Effect
+    effect_add: ($) => /\+[A-Z][a-zA-Z0-9_]*/,
+    // -Effect
+    effect_remove: ($) => /\-[A-Z][a-zA-Z0-9_]*/,
+
+    // :name
+    slot_push: ($) => /:[a-z][a-zA-Z0-9_]*/,
+
+    // ;name
+    slot_pop: ($) => /;[a-z][a-zA-Z0-9_]*/,
+
+    // 'raw string literal'
+    raw_string: ($) => /\'[^\']*\'/,
+
+    // Catch-all: any non-whitespace sequence that doesn't match a more specific
+    // rule. prec(-1) gives it the lowest priority so every other token wins
+    // when there is a tie. Structural characters ( ) [ ] are excluded because
+    // they are needed by the parser to delimit blocks and comments.
+    raw_value: ($) => token(prec(-1, /[^\s\[\]()']+/)),
 
     // Comment / doc block:  ( any text )
     // comment_content is recursive: it can contain plain text and/or nested
@@ -42,46 +108,55 @@ module.exports = grammar({
     comment_content: ($) => repeat1(choice(/[^()]+/, $.comment)),
 
     // Import:  +path/or/+pkg  Alias
-    import_decl: ($) => seq(field('path', $.import_path), field('alias', $.module_alias)),
-    import_path: ($) => seq('+', field('url', alias(/[^\s]+/, $.url))),
-    module_alias: ($) => seq('~', field('module', alias(UPPERNAME, $.module_ref))),
+    import: ($) => seq(field('path', $.path), field('module', $.module_def)),
+    path: ($) => /\+[^\s]+/,
+    // seq('+', field('url', alias(/[^\s]+/, $.url))),
 
     // Tag group:  &Name typeParam*  (#TagCase typeParam*)*
-    tag_group: ($) =>
+    group: ($) =>
       seq(
-        field('name_def', $.tag_group_name),
-        repeat($.type_variable),
+        field('def', $.group_def),
+        repeat($.type_var),
         optional(field('doc', $.comment)),
-        repeat($.tag_def),
+        repeat($.tag),
       ),
-    tag_group_name: ($) => seq('&', field('name', alias(UPPERNAME, $.group_ref))),
-    tag_def: ($) =>
+    tag: ($) =>
       seq(
-        field('name_def', $.tag_name),
-        optional(field('type_param', $.type_variable)),
+        field('def', $.tag_def),
+        optional(field('type_param', $.type_var)),
         optional(field('doc', $.comment)),
       ),
-    tag_name: ($) => seq('#', field('name', alias(UPPERNAME, $.tag_ref))),
+    group_type: ($) =>
+      seq(
+        field('group', choice($.group_ref, $.module_group_ref)),
+        optional(field('params', $._generic)),
+      ),
+    _generic: ($) => seq('{', repeat($._generic_content), '}'),
+    _generic_content: ($) => choice($.type, $.group_type, $.map_ref, $.module_map_ref),
 
     // Map definition:  %Name  (.field Type)*
-    map_def: ($) =>
-      seq(field('name_def', $.map_name), optional(field('doc', $.comment)), repeat($.map_field)),
-    map_name: ($) => seq('$', field('name', alias(UPPERNAME, $.map_ref))),
-    map_field: ($) =>
+    map: ($) => seq(field('def', $.map_def), optional(field('doc', $.comment)), repeat($.field)),
+    field: ($) =>
       seq(
-        field('key', $.map_field_name),
-        field('type', $.type_name),
+        field('key', $.field_def),
+        field('type', $._field_types),
         optional(field('doc', $.comment)),
       ),
-    map_field_name: ($) => seq('.', field('name', alias(LOWERNAME, $.field_ref))),
+    _field_types: ($) => choice($.type, $.group_type, $.map_ref, $.module_map_ref),
 
     // Word definition:  @name ( sig ) expr*
     // Signature is required per the spec ("Word definition must have a signature").
     // prec.right makes the body's repeat greedy: prefer consuming '(' as a body
     // comment rather than ending the word_def early.
-    word_def: ($) =>
-      prec.right(seq(field('name_def', $.word_name), field('sig', $.signature), repeat($._expr))),
-    word_name: ($) => seq('@', field('name', alias(LOWERNAME, $.word_ref))),
+    word: ($) =>
+      prec.right(
+        seq(
+          field('name_def', $.word_def),
+          field('sig', $.signature),
+          optional(field('doc', $.comment)),
+          repeat($._expr),
+        ),
+      ),
 
     // Signature:  ( inputs -- outputs +effects )
     // The required '--' token is what makes it unambiguous vs a comment.
@@ -92,10 +167,13 @@ module.exports = grammar({
         $.effect_add,
         $.effect_remove,
         $.spread,
-        $.type_name,
-        $.type_variable,
+        $.type,
+        $.type_var,
         $.sig_list,
         $.sig_quotation,
+        $.group_type,
+        $.map_ref,
+        $.module_map_ref,
       ),
 
     // [ Type Type ... ] — list / tuple type in a signature
@@ -104,35 +182,20 @@ module.exports = grammar({
     // ( a b -- c d ) — higher-order function type nested inside a signature
     sig_quotation: ($) => seq('(', repeat($._sig_item), $.sig_arrow, repeat($._sig_item), ')'),
 
-    // +IO, +FAIL, etc.
-    effect_add: ($) => seq('+', field('name', alias(UPPERNAME, $.effect_ref))),
-
-    // -IO, -FAIL, etc.  (uppercase after dash avoids matching negative numbers)
-    effect_remove: ($) => seq('-', field('name', alias(UPPERNAME, $.effect_ref))),
-
-    // ..a, ..row — spread / row-variable in a signature
-    spread: ($) => seq('..', field('name', alias(/[a-zA-Z][a-zA-Z0-9_]*/, $.spread_ref))),
-
-    // Uppercase type: Int, Str, Maybe, List, etc.
-    type_name: ($) => UPPERNAME,
-
-    // Lowercase type variable: a, b, elem, etc.
-    type_variable: ($) => LOWERNAME,
-
     // Expressions inside word bodies
     _expr: ($) =>
       choice(
         $.comment, // doc / inline comment block
         $.quotation,
         $.builtin_word,
-        $.word_call,
-        $.module_word_call,
-        $.module_tag_constructor,
-        $.module_map_access,
-        $.map_access,
-        $.tag_constructor,
+        $.word_ref,
+        $.module_word_ref,
+        $.tag_ref,
+        $.module_tag_ref,
         $.tag_pattern,
         $.default_pattern,
+        $.field_ref,
+        $.module_field_ref,
         $.slot_push,
         $.slot_pop,
         $.raw_string,
@@ -170,71 +233,5 @@ module.exports = grammar({
           'ERROR',
         ),
       ),
-
-    // /wordName — call a locally defined word
-    word_call: ($) => seq('/', field('word', alias(LOWERNAME, $.word_ref))),
-
-    // ~Module/word — module-qualified word call
-    // Broken into named fields so the AST exposes module_ref and word_ref nodes.
-    module_word_call: ($) =>
-      seq(
-        '~',
-        field('module', alias(UPPERNAME, $.module_ref)),
-        '/',
-        field('word', alias(LOWERNAME, $.word_ref)),
-      ),
-
-    // ~Module#TagName — module-qualified tag constructor
-    module_tag_constructor: ($) =>
-      seq(
-        '~',
-        field('module', alias(UPPERNAME, $.module_ref)),
-        '#',
-        field('tag', alias(UPPERNAME, $.tag_ref)),
-      ),
-
-    // ~Module,Map.field — module-qualified map field accessor / lens
-    module_map_access: ($) =>
-      seq(
-        '~',
-        field('module', alias(UPPERNAME, $.module_ref)),
-        ',',
-        field('map', alias(UPPERNAME, $.map_ref)),
-        '.',
-        field('field', alias(LOWERNAME, $.field_ref)),
-      ),
-
-    // ,Map.field — local map field accessor / lens
-    map_access: ($) =>
-      seq(
-        ',',
-        field('map', alias(UPPERNAME, $.map_ref)),
-        '.',
-        field('field', alias(LOWERNAME, $.field_ref)),
-      ),
-
-    // #TagName — construct a tagged union value
-    tag_constructor: ($) => seq('#', field('name', alias(UPPERNAME, $.tag_ref))),
-
-    // _TagName — match/destructure a tag in MATCH
-    tag_pattern: ($) => seq('_', field('name', alias(UPPERNAME, $.tag_ref))),
-
-    // _ — match/destructure a default in MATCH
-    default_pattern: ($) => token('_'),
-
-    // :name — pop the top of the stack into a named local slot
-    slot_push: ($) => seq(':', field('name', alias(LOWERNAME, $.slot_ref))),
-
-    // ;name — push a named local slot back onto the stack
-    slot_pop: ($) => seq(';', field('name', alias(LOWERNAME, $.slot_ref))),
-
-    // 'raw string literal'
-    raw_string: ($) => /\'[^\']*\'/,
-
-    // Catch-all: any non-whitespace sequence that doesn't match a more specific
-    // rule. prec(-1) gives it the lowest priority so every other token wins
-    // when there is a tie. Structural characters ( ) [ ] are excluded because
-    // they are needed by the parser to delimit blocks and comments.
-    raw_value: ($) => token(prec(-1, /[^\s\[\]()']+/)),
   },
 })

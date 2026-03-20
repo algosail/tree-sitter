@@ -30,148 +30,7 @@
     }
   },
   {
-    "type": "default_pattern",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "effect_add",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "effect_ref",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "effect_remove",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "effect_ref",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "import_decl",
-    "named": true,
-    "fields": {
-      "alias": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "module_alias",
-            "named": true
-          }
-        ]
-      },
-      "path": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "import_path",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "import_path",
-    "named": true,
-    "fields": {
-      "url": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "url",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "map_access",
-    "named": true,
-    "fields": {
-      "field": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "field_ref",
-            "named": true
-          }
-        ]
-      },
-      "map": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "map_ref",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "map_def",
-    "named": true,
-    "fields": {
-      "doc": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "comment",
-            "named": true
-          }
-        ]
-      },
-      "name_def": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "map_name",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "map_field",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "map_field",
+    "type": "field",
     "named": true,
     "fields": {
       "doc": {
@@ -189,7 +48,7 @@
         "required": true,
         "types": [
           {
-            "type": "map_field_name",
+            "type": "field_def",
             "named": true
           }
         ]
@@ -199,55 +58,19 @@
         "required": true,
         "types": [
           {
-            "type": "type_name",
+            "type": "group_type",
             "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "map_field_name",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "field_ref",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "map_name",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
+          },
           {
             "type": "map_ref",
             "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "module_alias",
-    "named": true,
-    "fields": {
-      "module": {
-        "multiple": false,
-        "required": true,
-        "types": [
+          },
           {
-            "type": "module_ref",
+            "type": "module_map_ref",
+            "named": true
+          },
+          {
+            "type": "type",
             "named": true
           }
         ]
@@ -255,43 +78,107 @@
     }
   },
   {
-    "type": "module_map_access",
+    "type": "group",
     "named": true,
     "fields": {
-      "field": {
+      "def": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "field_ref",
+            "type": "group_def",
             "named": true
           }
         ]
       },
-      "map": {
+      "doc": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "tag",
+          "named": true
+        },
+        {
+          "type": "type_var",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "group_def",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "group_ref",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "group_type",
+    "named": true,
+    "fields": {
+      "group": {
         "multiple": false,
         "required": true,
         "types": [
+          {
+            "type": "group_ref",
+            "named": true
+          },
+          {
+            "type": "module_group_ref",
+            "named": true
+          }
+        ]
+      },
+      "params": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "group_type",
+            "named": true
+          },
           {
             "type": "map_ref",
             "named": true
-          }
-        ]
-      },
-      "module": {
-        "multiple": false,
-        "required": true,
-        "types": [
+          },
           {
-            "type": "module_ref",
+            "type": "module_map_ref",
             "named": true
+          },
+          {
+            "type": "type",
+            "named": true
+          },
+          {
+            "type": "{",
+            "named": false
+          },
+          {
+            "type": "}",
+            "named": false
           }
         ]
       }
     }
   },
   {
-    "type": "module_tag_constructor",
+    "type": "import",
     "named": true,
     "fields": {
       "module": {
@@ -299,17 +186,17 @@
         "required": true,
         "types": [
           {
-            "type": "module_ref",
+            "type": "module_def",
             "named": true
           }
         ]
       },
-      "tag": {
+      "path": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "tag_ref",
+            "type": "path",
             "named": true
           }
         ]
@@ -317,30 +204,50 @@
     }
   },
   {
-    "type": "module_word_call",
+    "type": "map",
     "named": true,
     "fields": {
-      "module": {
+      "def": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "module_ref",
+            "type": "map_def",
             "named": true
           }
         ]
       },
-      "word": {
+      "doc": {
         "multiple": false,
-        "required": true,
+        "required": false,
         "types": [
           {
-            "type": "word_ref",
+            "type": "comment",
             "named": true
           }
         ]
       }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "field",
+          "named": true
+        }
+      ]
     }
+  },
+  {
+    "type": "map_def",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "map_ref",
+    "named": true,
+    "fields": {}
   },
   {
     "type": "quotation",
@@ -363,19 +270,19 @@
           "named": true
         },
         {
-          "type": "map_access",
+          "type": "field_ref",
           "named": true
         },
         {
-          "type": "module_map_access",
+          "type": "module_field_ref",
           "named": true
         },
         {
-          "type": "module_tag_constructor",
+          "type": "module_tag_ref",
           "named": true
         },
         {
-          "type": "module_word_call",
+          "type": "module_word_ref",
           "named": true
         },
         {
@@ -399,15 +306,15 @@
           "named": true
         },
         {
-          "type": "tag_constructor",
-          "named": true
-        },
-        {
           "type": "tag_pattern",
           "named": true
         },
         {
-          "type": "word_call",
+          "type": "tag_ref",
+          "named": true
+        },
+        {
+          "type": "word_ref",
           "named": true
         }
       ]
@@ -430,6 +337,18 @@
           "named": true
         },
         {
+          "type": "group_type",
+          "named": true
+        },
+        {
+          "type": "map_ref",
+          "named": true
+        },
+        {
+          "type": "module_map_ref",
+          "named": true
+        },
+        {
           "type": "sig_list",
           "named": true
         },
@@ -442,11 +361,11 @@
           "named": true
         },
         {
-          "type": "type_name",
+          "type": "type",
           "named": true
         },
         {
-          "type": "type_variable",
+          "type": "type_var",
           "named": true
         }
       ]
@@ -469,6 +388,18 @@
           "named": true
         },
         {
+          "type": "group_type",
+          "named": true
+        },
+        {
+          "type": "map_ref",
+          "named": true
+        },
+        {
+          "type": "module_map_ref",
+          "named": true
+        },
+        {
           "type": "sig_arrow",
           "named": true
         },
@@ -485,11 +416,11 @@
           "named": true
         },
         {
-          "type": "type_name",
+          "type": "type",
           "named": true
         },
         {
-          "type": "type_variable",
+          "type": "type_var",
           "named": true
         }
       ]
@@ -512,6 +443,18 @@
           "named": true
         },
         {
+          "type": "group_type",
+          "named": true
+        },
+        {
+          "type": "map_ref",
+          "named": true
+        },
+        {
+          "type": "module_map_ref",
+          "named": true
+        },
+        {
           "type": "sig_arrow",
           "named": true
         },
@@ -528,46 +471,14 @@
           "named": true
         },
         {
-          "type": "type_name",
+          "type": "type",
           "named": true
         },
         {
-          "type": "type_variable",
+          "type": "type_var",
           "named": true
         }
       ]
-    }
-  },
-  {
-    "type": "slot_pop",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "slot_ref",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "slot_push",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "slot_ref",
-            "named": true
-          }
-        ]
-      }
     }
   },
   {
@@ -584,76 +495,44 @@
           "named": true
         },
         {
-          "type": "import_decl",
+          "type": "group",
           "named": true
         },
         {
-          "type": "map_def",
+          "type": "import",
           "named": true
         },
         {
-          "type": "tag_group",
+          "type": "map",
           "named": true
         },
         {
-          "type": "word_def",
+          "type": "word",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "spread",
+    "type": "tag",
     "named": true,
     "fields": {
-      "name": {
+      "def": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "spread_ref",
+            "type": "tag_def",
             "named": true
           }
         ]
-      }
-    }
-  },
-  {
-    "type": "tag_constructor",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "tag_ref",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "tag_def",
-    "named": true,
-    "fields": {
+      },
       "doc": {
         "multiple": false,
         "required": false,
         "types": [
           {
             "type": "comment",
-            "named": true
-          }
-        ]
-      },
-      "name_def": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "tag_name",
             "named": true
           }
         ]
@@ -663,7 +542,7 @@
         "required": false,
         "types": [
           {
-            "type": "type_variable",
+            "type": "type_var",
             "named": true
           }
         ]
@@ -671,7 +550,17 @@
     }
   },
   {
-    "type": "tag_group",
+    "type": "tag_def",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "tag_ref",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "word",
     "named": true,
     "fields": {
       "doc": {
@@ -689,111 +578,7 @@
         "required": true,
         "types": [
           {
-            "type": "tag_group_name",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "tag_def",
-          "named": true
-        },
-        {
-          "type": "type_variable",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "tag_group_name",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "group_ref",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "tag_name",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "tag_ref",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "tag_pattern",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "tag_ref",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "type_name",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "type_variable",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "word_call",
-    "named": true,
-    "fields": {
-      "word": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "word_ref",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "word_def",
-    "named": true,
-    "fields": {
-      "name_def": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "word_name",
+            "type": "word_def",
             "named": true
           }
         ]
@@ -826,19 +611,19 @@
           "named": true
         },
         {
-          "type": "map_access",
+          "type": "field_ref",
           "named": true
         },
         {
-          "type": "module_map_access",
+          "type": "module_field_ref",
           "named": true
         },
         {
-          "type": "module_tag_constructor",
+          "type": "module_tag_ref",
           "named": true
         },
         {
-          "type": "module_word_call",
+          "type": "module_word_ref",
           "named": true
         },
         {
@@ -862,47 +647,19 @@
           "named": true
         },
         {
-          "type": "tag_constructor",
-          "named": true
-        },
-        {
           "type": "tag_pattern",
           "named": true
         },
         {
-          "type": "word_call",
+          "type": "tag_ref",
+          "named": true
+        },
+        {
+          "type": "word_ref",
           "named": true
         }
       ]
     }
-  },
-  {
-    "type": "word_name",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "word_ref",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "#",
-    "named": false
-  },
-  {
-    "type": "$",
-    "named": false
-  },
-  {
-    "type": "&",
-    "named": false
   },
   {
     "type": "(",
@@ -910,42 +667,6 @@
   },
   {
     "type": ")",
-    "named": false
-  },
-  {
-    "type": "+",
-    "named": false
-  },
-  {
-    "type": ",",
-    "named": false
-  },
-  {
-    "type": "-",
-    "named": false
-  },
-  {
-    "type": ".",
-    "named": false
-  },
-  {
-    "type": "..",
-    "named": false
-  },
-  {
-    "type": "/",
-    "named": false
-  },
-  {
-    "type": ":",
-    "named": false
-  },
-  {
-    "type": ";",
-    "named": false
-  },
-  {
-    "type": "@",
     "named": false
   },
   {
@@ -957,15 +678,23 @@
     "named": false
   },
   {
-    "type": "_",
-    "named": false
-  },
-  {
     "type": "builtin_word",
     "named": true
   },
   {
-    "type": "effect_ref",
+    "type": "default_pattern",
+    "named": true
+  },
+  {
+    "type": "effect_add",
+    "named": true
+  },
+  {
+    "type": "effect_remove",
+    "named": true
+  },
+  {
+    "type": "field_def",
     "named": true
   },
   {
@@ -973,15 +702,31 @@
     "named": true
   },
   {
-    "type": "group_ref",
+    "type": "module_def",
     "named": true
   },
   {
-    "type": "map_ref",
+    "type": "module_field_ref",
     "named": true
   },
   {
-    "type": "module_ref",
+    "type": "module_group_ref",
+    "named": true
+  },
+  {
+    "type": "module_map_ref",
+    "named": true
+  },
+  {
+    "type": "module_tag_ref",
+    "named": true
+  },
+  {
+    "type": "module_word_ref",
+    "named": true
+  },
+  {
+    "type": "path",
     "named": true
   },
   {
@@ -997,19 +742,31 @@
     "named": true
   },
   {
-    "type": "slot_ref",
+    "type": "slot_pop",
     "named": true
   },
   {
-    "type": "spread_ref",
+    "type": "slot_push",
     "named": true
   },
   {
-    "type": "tag_ref",
+    "type": "spread",
     "named": true
   },
   {
-    "type": "url",
+    "type": "tag_pattern",
+    "named": true
+  },
+  {
+    "type": "type",
+    "named": true
+  },
+  {
+    "type": "type_var",
+    "named": true
+  },
+  {
+    "type": "word_def",
     "named": true
   },
   {
@@ -1017,7 +774,11 @@
     "named": true
   },
   {
-    "type": "~",
+    "type": "{",
+    "named": false
+  },
+  {
+    "type": "}",
     "named": false
   }
 ]
