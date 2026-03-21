@@ -822,34 +822,6 @@
           {
             "type": "STRING",
             "value": "COMPOSE"
-          },
-          {
-            "type": "STRING",
-            "value": "IF"
-          },
-          {
-            "type": "STRING",
-            "value": "MAP"
-          },
-          {
-            "type": "STRING",
-            "value": "GETL"
-          },
-          {
-            "type": "STRING",
-            "value": "SETL"
-          },
-          {
-            "type": "STRING",
-            "value": "UPDL"
-          },
-          {
-            "type": "STRING",
-            "value": "APP"
-          },
-          {
-            "type": "STRING",
-            "value": "ERROR"
           }
         ]
       }

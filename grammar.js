@@ -1,6 +1,8 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
+const { builtinWords } = require('@algosail/builtins')
+
 module.exports = grammar({
   name: 'sail',
 
@@ -197,31 +199,6 @@ module.exports = grammar({
 
     // All-caps stack-manipulation and control-flow builtins.
     // Listed as a single token() so they take priority over $.identifier.
-    builtin_word: ($) =>
-      token(
-        choice(
-          'DUP',
-          'SWAP',
-          'DROP',
-          'OVER',
-          'ROT',
-          'ROTR',
-          'NIP',
-          'TUCK',
-          'DUP2',
-          'DROP2',
-          'SWAP2',
-          'CALL',
-          'MATCH',
-          'COMPOSE',
-          'IF',
-          'MAP',
-          'GETL',
-          'SETL',
-          'UPDL',
-          'APP',
-          'ERROR',
-        ),
-      ),
+    builtin_word: ($) => token(choice(...Object.keys(builtinWords))),
   },
 })
