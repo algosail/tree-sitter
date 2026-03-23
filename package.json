@@ -41,6 +41,6 @@
     "*.wasm"
   ],
   "dependencies": {
-    "@algosail/builtins": "^0.0.2"
+    "@algosail/builtins": "^0.0.3"
   }
 }
