@@ -1,6 +1,6 @@
 {
   "name": "@algosail/tree-sitter",
-  "version": "0.1.9",
+  "version": "0.1.12",
   "description": "Tree-sitter grammar for the Sail language",
   "main": "bindings/node",
   "types": "bindings/node",
@@ -41,6 +41,6 @@
     "*.wasm"
   ],
   "dependencies": {
-    "@algosail/builtins": "^0.0.3"
+    "@algosail/builtins": "^0.0.4"
   }
 }
