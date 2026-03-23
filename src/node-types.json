@@ -35,54 +35,6 @@
     "fields": {}
   },
   {
-    "type": "field",
-    "named": true,
-    "fields": {
-      "doc": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "comment",
-            "named": true
-          }
-        ]
-      },
-      "key": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "field_def",
-            "named": true
-          }
-        ]
-      },
-      "type": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "group_type",
-            "named": true
-          },
-          {
-            "type": "map_ref",
-            "named": true
-          },
-          {
-            "type": "module_map_ref",
-            "named": true
-          },
-          {
-            "type": "type",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "group",
     "named": true,
     "fields": {
@@ -159,14 +111,6 @@
             "named": true
           },
           {
-            "type": "map_ref",
-            "named": true
-          },
-          {
-            "type": "module_map_ref",
-            "named": true
-          },
-          {
             "type": "type",
             "named": true
           }
@@ -201,52 +145,6 @@
     }
   },
   {
-    "type": "map",
-    "named": true,
-    "fields": {
-      "def": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "map_def",
-            "named": true
-          }
-        ]
-      },
-      "doc": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "comment",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "field",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "map_def",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "map_ref",
-    "named": true,
-    "fields": {}
-  },
-  {
     "type": "module_def",
     "named": true,
     "fields": {}
@@ -269,14 +167,6 @@
         },
         {
           "type": "default_pattern",
-          "named": true
-        },
-        {
-          "type": "field_ref",
-          "named": true
-        },
-        {
-          "type": "module_field_ref",
           "named": true
         },
         {
@@ -347,11 +237,7 @@
           "named": true
         },
         {
-          "type": "map_ref",
-          "named": true
-        },
-        {
-          "type": "module_map_ref",
+          "type": "raw_ref",
           "named": true
         },
         {
@@ -360,10 +246,6 @@
         },
         {
           "type": "sig_quotation",
-          "named": true
-        },
-        {
-          "type": "spread",
           "named": true
         },
         {
@@ -398,11 +280,7 @@
           "named": true
         },
         {
-          "type": "map_ref",
-          "named": true
-        },
-        {
-          "type": "module_map_ref",
+          "type": "raw_ref",
           "named": true
         },
         {
@@ -415,10 +293,6 @@
         },
         {
           "type": "sig_quotation",
-          "named": true
-        },
-        {
-          "type": "spread",
           "named": true
         },
         {
@@ -453,11 +327,7 @@
           "named": true
         },
         {
-          "type": "map_ref",
-          "named": true
-        },
-        {
-          "type": "module_map_ref",
+          "type": "raw_ref",
           "named": true
         },
         {
@@ -470,10 +340,6 @@
         },
         {
           "type": "sig_quotation",
-          "named": true
-        },
-        {
-          "type": "spread",
           "named": true
         },
         {
@@ -506,10 +372,6 @@
         },
         {
           "type": "import",
-          "named": true
-        },
-        {
-          "type": "map",
           "named": true
         },
         {
@@ -583,14 +445,6 @@
           },
           {
             "type": "default_pattern",
-            "named": true
-          },
-          {
-            "type": "field_ref",
-            "named": true
-          },
-          {
-            "type": "module_field_ref",
             "named": true
           },
           {
@@ -700,23 +554,7 @@
     "named": true
   },
   {
-    "type": "field_def",
-    "named": true
-  },
-  {
-    "type": "field_ref",
-    "named": true
-  },
-  {
-    "type": "module_field_ref",
-    "named": true
-  },
-  {
     "type": "module_group_ref",
-    "named": true
-  },
-  {
-    "type": "module_map_ref",
     "named": true
   },
   {
@@ -733,6 +571,10 @@
   },
   {
     "type": "path",
+    "named": true
+  },
+  {
+    "type": "raw_ref",
     "named": true
   },
   {
@@ -753,10 +595,6 @@
   },
   {
     "type": "slot_write",
-    "named": true
-  },
-  {
-    "type": "spread",
     "named": true
   },
   {

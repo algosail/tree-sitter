@@ -14,8 +14,6 @@ module.exports = grammar({
     // top-level construct. Cannot be resolved by LALR(1).
     [$.group],
     [$.tag],
-    [$.map],
-    [$.field],
 
     // After word_def + sig + optional(doc), a comment is ambiguous:
     // it could be the doc field OR an _expr in the body.
@@ -24,7 +22,7 @@ module.exports = grammar({
 
   rules: {
     source_file: ($) => repeat($._top_level),
-    _top_level: ($) => choice($.comment, $.import, $.group, $.map, $.word),
+    _top_level: ($) => choice($.comment, $.import, $.group, $.word),
 
     // ~Module
     module_def: ($) => /\+[A-Z][a-zA-Z0-9_]*/,
@@ -42,14 +40,6 @@ module.exports = grammar({
     tag_pattern: ($) => /\_[A-Z][a-zA-Z0-9_]*/,
     // _
     default_pattern: ($) => token('_'),
-    // $Map
-    map_def: ($) => /\$[A-Z][a-zA-Z0-9_]*/,
-    // $Map
-    map_ref: ($) => /\$[A-Z][a-zA-Z0-9_]*/,
-    // .field
-    field_def: ($) => /\.[a-z][a-zA-Z0-9_]*/,
-    // $Map.field
-    field_ref: ($) => /\$[A-Z][a-zA-Z0-9_]*\.[a-z][a-zA-Z0-9_]*/,
     // @word
     word_def: ($) => /@[a-z][a-zA-Z0-9_]*/,
     // /word
@@ -61,10 +51,6 @@ module.exports = grammar({
     module_tag_ref: ($) => /~[A-Z][a-zA-Z0-9_]*#[A-Z][a-zA-Z0-9_]*/,
     // ~Module#Tag
     module_tag_pattern: ($) => /~[A-Z][a-zA-Z0-9_]*\_[A-Z][a-zA-Z0-9_]*/,
-    // ~Module$Map
-    module_map_ref: ($) => /~[A-Z][a-zA-Z0-9_]*\$[A-Z][a-zA-Z0-9_]*/,
-    // ~Module$Map.field
-    module_field_ref: ($) => /~[A-Z][a-zA-Z0-9_]*\$[A-Z][a-zA-Z0-9_]*\.[a-z][a-zA-Z0-9_]*/,
     // ~Module/word
     module_word_ref: ($) => /~[A-Z][a-zA-Z0-9_]*\/[a-z][a-zA-Z0-9_]*/,
 
@@ -72,8 +58,6 @@ module.exports = grammar({
     type: ($) => /[A-Z][a-zA-Z0-9_]*/,
     // Lowercase type variable: a, b, elem, etc.
     type_var: ($) => /[a-z][a-zA-Z0-9_]*/,
-    // Lowercase type variable: a, b, elem, etc.
-    spread: ($) => /\.\.[a-z][a-zA-Z0-9_]*/,
 
     // +Effect
     effect_add: ($) => /\+[A-Z][a-zA-Z0-9_]*/,
@@ -94,6 +78,7 @@ module.exports = grammar({
     // when there is a tie. Structural characters ( ) [ ] are excluded because
     // they are needed by the parser to delimit blocks and comments.
     raw_value: ($) => token(prec(-1, /[^\s\[\]()']+/)),
+    raw_ref: ($) => token('*'),
 
     // Comment / doc block:  ( any text )
     // comment_content is recursive: it can contain plain text and/or nested
@@ -123,17 +108,7 @@ module.exports = grammar({
     group_type: ($) =>
       seq(field('group', choice($.group_ref, $.module_group_ref)), optional($._generic)),
     _generic: ($) => seq('{', field('params', repeat($._generic_content)), '}'),
-    _generic_content: ($) => choice($.type, $.group_type, $.map_ref, $.module_map_ref),
-
-    // Map definition:  %Name  (.field Type)*
-    map: ($) => seq(field('def', $.map_def), optional(field('doc', $.comment)), repeat($.field)),
-    field: ($) =>
-      seq(
-        field('key', $.field_def),
-        field('type', $._field_types),
-        optional(field('doc', $.comment)),
-      ),
-    _field_types: ($) => choice($.type, $.group_type, $.map_ref, $.module_map_ref),
+    _generic_content: ($) => choice($.type, $.group_type),
 
     // Word definition:  @name ( sig ) expr*
     // Signature is required per the spec ("Word definition must have a signature").
@@ -157,14 +132,12 @@ module.exports = grammar({
       choice(
         $.effect_add,
         $.effect_remove,
-        $.spread,
+        $.raw_ref,
         $.type,
         $.type_var,
         $.sig_list,
         $.sig_quotation,
         $.group_type,
-        $.map_ref,
-        $.module_map_ref,
       ),
 
     // [ Type Type ... ] — list / tuple type in a signature
@@ -186,8 +159,6 @@ module.exports = grammar({
         $.tag_pattern,
         $.module_tag_pattern,
         $.default_pattern,
-        $.field_ref,
-        $.module_field_ref,
         $.slot_write,
         $.slot_read,
         $.raw_string,
