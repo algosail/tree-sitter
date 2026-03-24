@@ -1,8 +1,6 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
 
-const { builtinWords } = require('@algosail/builtins')
-
 module.exports = grammar({
   name: 'sail',
 
@@ -80,11 +78,10 @@ module.exports = grammar({
     raw_value: ($) => token(prec(-1, /[^\s\[\]()']+/)),
     raw_ref: ($) => token('*'),
 
-    // Comment / doc block:  ( any text )
-    // comment_content is recursive: it can contain plain text and/or nested
-    // parenthesised groups, so  ( use f(x) here )  parses correctly.
-    comment: ($) => seq('(', optional($.comment_content), ')'),
-    comment_content: ($) => repeat1(choice(/[^()]+/, $.comment)),
+    // Comment / doc block:  // any text //
+    // Closing // is required. Content cannot contain // (would end early).
+    comment: ($) => seq('//', optional($.comment_content), '//'),
+    comment_content: ($) => token(prec(-1, /[^\/]*(?:\/[^\/][^\/]*)*/)),
 
     // Import:  +Alias path/or/+pkg
     import: ($) => seq(field('module', $.module_def), field('path', $.path)),
@@ -151,6 +148,7 @@ module.exports = grammar({
       choice(
         $.comment, // doc / inline comment block
         $.quotation,
+        $.list_literal,
         $.builtin_word,
         $.word_ref,
         $.module_word_ref,
@@ -165,11 +163,15 @@ module.exports = grammar({
         $.raw_value,
       ),
 
-    // [ expr* ] — quotation (anonymous code block or list literal)
-    quotation: ($) => seq('[', repeat($._expr), ']'),
+    // ( expr* ) — quotation (anonymous code block)
+    quotation: ($) => seq('(', repeat($._expr), ')'),
 
-    // All-caps stack-manipulation and control-flow builtins.
-    // Listed as a single token() so they take priority over $.identifier.
-    builtin_word: ($) => token(choice(...Object.keys(builtinWords))),
+    // [ item* ] — list literal (raw values only)
+    list_literal: ($) => seq('[', repeat($._list_item), ']'),
+    _list_item: ($) => choice($.raw_string, $.raw_value),
+
+    // All-caps identifiers (builtins: DUP, SWAP, DIP, etc.)
+    // Any [A-Z][A-Z0-9_]* — typecheck rejects unknown ones.
+    builtin_word: ($) => token(/[A-Z][A-Z0-9_]*/),
   },
 })

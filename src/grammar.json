@@ -140,7 +140,7 @@
       "members": [
         {
           "type": "STRING",
-          "value": "("
+          "value": "//"
         },
         {
           "type": "CHOICE",
@@ -156,24 +156,19 @@
         },
         {
           "type": "STRING",
-          "value": ")"
+          "value": "//"
         }
       ]
     },
     "comment_content": {
-      "type": "REPEAT1",
+      "type": "TOKEN",
       "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "PATTERN",
-            "value": "[^()]+"
-          },
-          {
-            "type": "SYMBOL",
-            "name": "comment"
-          }
-        ]
+        "type": "PREC",
+        "value": -1,
+        "content": {
+          "type": "PATTERN",
+          "value": "[^\\/]*(?:\\/[^\\/][^\\/]*)*"
+        }
       }
     },
     "import": {
@@ -551,6 +546,10 @@
         },
         {
           "type": "SYMBOL",
+          "name": "list_literal"
+        },
+        {
+          "type": "SYMBOL",
           "name": "builtin_word"
         },
         {
@@ -604,7 +603,7 @@
       "members": [
         {
           "type": "STRING",
-          "value": "["
+          "value": "("
         },
         {
           "type": "REPEAT",
@@ -615,184 +614,48 @@
         },
         {
           "type": "STRING",
+          "value": ")"
+        }
+      ]
+    },
+    "list_literal": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "["
+        },
+        {
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "_list_item"
+          }
+        },
+        {
+          "type": "STRING",
           "value": "]"
+        }
+      ]
+    },
+    "_list_item": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "raw_string"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "raw_value"
         }
       ]
     },
     "builtin_word": {
       "type": "TOKEN",
       "content": {
-        "type": "CHOICE",
-        "members": [
-          {
-            "type": "STRING",
-            "value": "ALL"
-          },
-          {
-            "type": "STRING",
-            "value": "ANY"
-          },
-          {
-            "type": "STRING",
-            "value": "APPEND"
-          },
-          {
-            "type": "STRING",
-            "value": "BI"
-          },
-          {
-            "type": "STRING",
-            "value": "CALL"
-          },
-          {
-            "type": "STRING",
-            "value": "CLEAR"
-          },
-          {
-            "type": "STRING",
-            "value": "CLEAVE"
-          },
-          {
-            "type": "STRING",
-            "value": "COMPOSE"
-          },
-          {
-            "type": "STRING",
-            "value": "CONCAT"
-          },
-          {
-            "type": "STRING",
-            "value": "CONS"
-          },
-          {
-            "type": "STRING",
-            "value": "DIP"
-          },
-          {
-            "type": "STRING",
-            "value": "DROP"
-          },
-          {
-            "type": "STRING",
-            "value": "DROP2"
-          },
-          {
-            "type": "STRING",
-            "value": "DUP"
-          },
-          {
-            "type": "STRING",
-            "value": "DUP2"
-          },
-          {
-            "type": "STRING",
-            "value": "EACH"
-          },
-          {
-            "type": "STRING",
-            "value": "FILTER"
-          },
-          {
-            "type": "STRING",
-            "value": "FIND"
-          },
-          {
-            "type": "STRING",
-            "value": "FIRST"
-          },
-          {
-            "type": "STRING",
-            "value": "HEAD"
-          },
-          {
-            "type": "STRING",
-            "value": "KEEP"
-          },
-          {
-            "type": "STRING",
-            "value": "LAST"
-          },
-          {
-            "type": "STRING",
-            "value": "MAP"
-          },
-          {
-            "type": "STRING",
-            "value": "MATCH"
-          },
-          {
-            "type": "STRING",
-            "value": "NIP"
-          },
-          {
-            "type": "STRING",
-            "value": "OVER"
-          },
-          {
-            "type": "STRING",
-            "value": "POP"
-          },
-          {
-            "type": "STRING",
-            "value": "REDUCE"
-          },
-          {
-            "type": "STRING",
-            "value": "REST"
-          },
-          {
-            "type": "STRING",
-            "value": "REVERSE"
-          },
-          {
-            "type": "STRING",
-            "value": "ROT"
-          },
-          {
-            "type": "STRING",
-            "value": "ROTR"
-          },
-          {
-            "type": "STRING",
-            "value": "SCAN"
-          },
-          {
-            "type": "STRING",
-            "value": "SPREAD"
-          },
-          {
-            "type": "STRING",
-            "value": "SWAP"
-          },
-          {
-            "type": "STRING",
-            "value": "SWAP2"
-          },
-          {
-            "type": "STRING",
-            "value": "TAIL"
-          },
-          {
-            "type": "STRING",
-            "value": "TRI"
-          },
-          {
-            "type": "STRING",
-            "value": "TUCK"
-          },
-          {
-            "type": "STRING",
-            "value": "UNCONS"
-          },
-          {
-            "type": "STRING",
-            "value": "UNZIP"
-          },
-          {
-            "type": "STRING",
-            "value": "ZIP"
-          }
-        ]
+        "type": "PATTERN",
+        "value": "[A-Z][A-Z0-9_]*"
       }
     }
   },

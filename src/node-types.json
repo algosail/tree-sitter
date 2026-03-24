@@ -15,21 +15,6 @@
     }
   },
   {
-    "type": "comment_content",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": false,
-      "types": [
-        {
-          "type": "comment",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "effect_add",
     "named": true,
     "fields": {}
@@ -145,6 +130,25 @@
     }
   },
   {
+    "type": "list_literal",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "raw_string",
+          "named": true
+        },
+        {
+          "type": "raw_value",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "module_def",
     "named": true,
     "fields": {}
@@ -167,6 +171,10 @@
         },
         {
           "type": "default_pattern",
+          "named": true
+        },
+        {
+          "type": "list_literal",
           "named": true
         },
         {
@@ -448,6 +456,10 @@
             "named": true
           },
           {
+            "type": "list_literal",
+            "named": true
+          },
+          {
             "type": "module_tag_pattern",
             "named": true
           },
@@ -534,6 +546,10 @@
     "named": false
   },
   {
+    "type": "//",
+    "named": false
+  },
+  {
     "type": "[",
     "named": false
   },
@@ -543,6 +559,10 @@
   },
   {
     "type": "builtin_word",
+    "named": true
+  },
+  {
+    "type": "comment_content",
     "named": true
   },
   {
