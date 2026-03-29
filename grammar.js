@@ -1,5 +1,8 @@
 /// <reference types="tree-sitter-cli/dsl" />
 // @ts-check
+//
+// Phrase structure: RFC-0.1 §12.2. Lexical tokens: RFC-lex-0.1.
+// Node name `group` / `tag` kept for existing parser queries (parser/lib/group.js).
 
 module.exports = grammar({
   name: 'sail',
@@ -7,110 +10,113 @@ module.exports = grammar({
   extras: ($) => [/\s+/],
 
   conflicts: ($) => [
-    // GLR self-conflicts: after the rule's main tokens, '(' is ambiguous —
-    // it could be the doc comment for THIS node or the start of the NEXT
-    // top-level construct. Cannot be resolved by LALR(1).
-    [$.group],
+    [$._type_expr, $.generic_type_expr],
     [$.tag],
-
-    // After word_def + sig + optional(doc), a comment is ambiguous:
-    // it could be the doc field OR an _expr in the body.
+    [$.product_field],
+    [$.generic_type_expr, $.sig_type_expr],
     [$.word, $._expr],
   ],
 
   rules: {
     source_file: ($) => repeat($._top_level),
-    _top_level: ($) => choice($.comment, $.import, $.group, $.word),
+    _top_level: ($) => choice($.comment, $.import, $.group, $.product_type, $.word),
 
-    // ~Module
-    module_def: ($) => /\+[A-Z][a-zA-Z0-9_]*/,
-    // ~Module
-    module_ref: ($) => /~[A-Z][a-zA-Z0-9_]*/,
-    // &Group
-    group_def: ($) => /&[A-Z][a-zA-Z0-9_]*/,
-    // &Group
-    group_ref: ($) => /&[A-Z][a-zA-Z0-9_]*/,
-    // #Tag
-    tag_def: ($) => /#[A-Z][a-zA-Z0-9_]*/,
-    // #Tag
-    tag_ref: ($) => /#[A-Z][a-zA-Z0-9_]*/,
-    // _Tag
-    tag_pattern: ($) => /\_[A-Z][a-zA-Z0-9_]*/,
-    // _
-    default_pattern: ($) => token('_'),
-    // @word
-    word_def: ($) => /@[a-z][a-zA-Z0-9_]*/,
-    // /word
-    word_ref: ($) => /\/[a-z][a-zA-Z0-9_]*/,
+    module_def: ($) => token(/\+[A-Z][a-zA-Z0-9_]*/),
+    module_type_ref: ($) => token(/~[A-Z][a-zA-Z0-9_]*\/[A-Z][a-zA-Z0-9_]*/),
+    module_word_ref: ($) => token(/~[A-Z][a-zA-Z0-9_]*\/[a-z][a-zA-Z0-9_]*/),
 
-    // ~Module&Group
-    module_group_ref: ($) => /~[A-Z][a-zA-Z0-9_]*&[A-Z][a-zA-Z0-9_]*/,
-    // ~Module#Tag
-    module_tag_ref: ($) => /~[A-Z][a-zA-Z0-9_]*#[A-Z][a-zA-Z0-9_]*/,
-    // ~Module#Tag
-    module_tag_pattern: ($) => /~[A-Z][a-zA-Z0-9_]*\_[A-Z][a-zA-Z0-9_]*/,
-    // ~Module/word
-    module_word_ref: ($) => /~[A-Z][a-zA-Z0-9_]*\/[a-z][a-zA-Z0-9_]*/,
+    type_name: ($) => token(/[A-Z][a-zA-Z0-9_]*/),
+    type_var: ($) => token(/[a-z][a-zA-Z0-9_]*/),
 
-    // Uppercase type: Int, Str, Maybe, List, etc.
-    type: ($) => /[A-Z][a-zA-Z0-9_]*/,
-    // Lowercase type variable: a, b, elem, etc.
-    type_var: ($) => /[a-z][a-zA-Z0-9_]*/,
+    tag_name: ($) => token(/[A-Z][a-zA-Z0-9_]*/),
+    field_name: ($) => token(/[a-z][a-zA-Z0-9_]*/),
 
-    // +Effect
-    effect_add: ($) => /\+[A-Z][a-zA-Z0-9_]*/,
-    // -Effect
-    effect_remove: ($) => /\-[A-Z][a-zA-Z0-9_]*/,
+    group_def: ($) => token(/&[A-Z][a-zA-Z0-9_]*/),
 
-    // :name
-    slot_write: ($) => /:[a-z][a-zA-Z0-9_]*/,
+    word_def: ($) => token(/@[a-z][a-zA-Z0-9_]*/),
+    word_ref: ($) => token(/\/[a-z][a-zA-Z0-9_]*/),
 
-    // ;name
-    slot_read: ($) => /;[a-z][a-zA-Z0-9_]*/,
+    word_name: ($) => token(/[a-z][a-zA-Z0-9_]*/),
 
-    // 'raw string literal'
-    raw_string: ($) => /\'[^\']*\'/,
+    effect_add: ($) => token(/\+(Async|Fail)/),
+    effect_remove: ($) => token(/-(Async|Fail)/),
 
-    // Catch-all: any non-whitespace sequence that doesn't match a more specific
-    // rule. prec(-1) gives it the lowest priority so every other token wins
-    // when there is a tie. Structural characters ( ) [ ] are excluded because
-    // they are needed by the parser to delimit blocks and comments.
-    raw_value: ($) => token(prec(-1, /[^\s\[\]()']+/)),
-    raw_ref: ($) => token('*'),
+    stack_var: ($) => token(/~[a-z][a-zA-Z0-9_]*/),
 
-    // Comment / doc block:  // any text //
-    // Closing // is required. Content cannot contain // (would end early).
-    comment: ($) => seq('//', optional($.comment_content), '//'),
-    comment_content: ($) => token(prec(-1, /[^\/]*(?:\/[^\/][^\/]*)*/)),
+    ident: ($) => token(/[a-zA-Z_][a-zA-Z0-9_]*/),
 
-    // Import:  +Alias path/or/+pkg
-    import: ($) => seq(field('module', $.module_def), field('path', $.path)),
-    path: ($) => /[^\s]+/,
-    // seq('+', field('url', alias(/[^\s]+/, $.url))),
+    path: ($) => /[^\s()]+/,
 
-    // Tag group:  &Name typeParam*  (#TagCase typeParam*)*
+    comment: ($) => seq('--', optional($.comment_content), '--'),
+    // No lookahead in tree-sitter regex: forbid `--` inside content via `([^-]|-[^-])*`.
+    comment_content: ($) => token(prec(-1, /([^-]|-[^-])*/)),
+
+    import: ($) =>
+      seq(
+        field('module', $.module_def),
+        choice(
+          field('path', $.path),
+          seq('(', repeat($.import_item), ')', field('path', $.path)),
+        ),
+      ),
+
+    import_item: ($) => choice($.word_import_item, $.type_import_item),
+    word_import_item: ($) => seq('@', field('name', $.word_name)),
+    type_import_item: ($) => seq('&', field('type', $.type_name)),
+
     group: ($) =>
       seq(
         field('def', $.group_def),
         repeat($.type_var),
         optional(field('doc', $.comment)),
-        repeat($.tag),
+        repeat1($.tag),
       ),
+
     tag: ($) =>
       seq(
-        field('def', $.tag_def),
-        optional(field('type_param', $.type_var)),
+        '|',
+        field('def', $.tag_name),
+        optional(field('payload', $._type_expr)),
         optional(field('doc', $.comment)),
       ),
-    group_type: ($) =>
-      seq(field('group', choice($.group_ref, $.module_group_ref)), optional($._generic)),
-    _generic: ($) => seq('{', field('params', repeat($._generic_content)), '}'),
-    _generic_content: ($) => choice($.type, $.group_type),
 
-    // Word definition:  @name ( sig ) expr*
-    // Signature is required per the spec ("Word definition must have a signature").
-    // prec.right makes the body's repeat greedy: prefer consuming '(' as a body
-    // comment rather than ending the word_def early.
+    product_type: ($) =>
+      seq(
+        field('def', $.group_def),
+        repeat($.type_var),
+        optional(field('doc', $.comment)),
+        repeat1($.product_field),
+      ),
+
+    product_field: ($) =>
+      seq(
+        ':',
+        field('name', $.field_name),
+        $._type_expr,
+        optional(field('doc', $.comment)),
+      ),
+
+    _type_expr: ($) =>
+      choice(
+        $.map_type_expr,
+        $.dict_type_expr,
+        $.list_type_expr,
+        seq('(', $._type_expr, ')'),
+        $.generic_type_expr,
+        $.module_type_ref,
+        $.type_name,
+        $.type_var,
+      ),
+
+    list_type_expr: ($) => seq('List', $._type_expr),
+    dict_type_expr: ($) => seq('Dict', $._type_expr),
+    map_type_expr: ($) => seq('Map', $._type_expr, $._type_expr),
+
+    generic_type_expr: ($) =>
+      prec.right(
+        seq(choice($.type_name, $.module_type_ref), $._type_expr, repeat($._type_expr)),
+      ),
+
     word: ($) =>
       prec.right(
         seq(
@@ -121,57 +127,75 @@ module.exports = grammar({
         ),
       ),
 
-    // Signature:  ( inputs -- outputs +effects )
-    // The required '--' token is what makes it unambiguous vs a comment.
     signature: ($) => seq('(', repeat($._sig_item), $.sig_arrow, repeat($._sig_item), ')'),
-    sig_arrow: ($) => token('--'),
+    sig_arrow: ($) => '->',
+
     _sig_item: ($) =>
       choice(
         $.effect_add,
         $.effect_remove,
-        $.raw_ref,
-        $.type,
-        $.type_var,
-        $.sig_list,
-        $.sig_quotation,
-        $.group_type,
+        $.named_quotation_sig,
+        $.quotation_sig,
+        $.stack_var,
+        $.sig_type_expr,
       ),
 
-    // [ Type Type ... ] — list / tuple type in a signature
-    sig_list: ($) => seq('[', repeat($._sig_item), ']'),
+    sig_type_expr: ($) =>
+      choice(seq('(', $._type_expr, ')'), $.module_type_ref, $.type_name, $.type_var),
 
-    // ( a b -- c d ) — higher-order function type nested inside a signature
-    sig_quotation: ($) => seq('(', repeat($._sig_item), $.sig_arrow, repeat($._sig_item), ')'),
+    quotation_sig: ($) => seq('(', repeat($._sig_item), $.sig_arrow, repeat($._sig_item), ')'),
 
-    // Expressions inside word bodies
+    named_quotation_sig: ($) => seq($.ident, ':', $.quotation_sig),
+
+    quotation: ($) => seq('(', repeat($._expr), ')'),
+
+    list_literal: ($) => seq('[', repeat($.literal), ']'),
+
     _expr: ($) =>
       choice(
-        $.comment, // doc / inline comment block
+        $.comment,
         $.quotation,
         $.list_literal,
+        $.literal,
         $.builtin_word,
         $.word_ref,
         $.module_word_ref,
-        $.tag_ref,
-        $.module_tag_ref,
-        $.tag_pattern,
-        $.module_tag_pattern,
-        $.default_pattern,
         $.slot_write,
         $.slot_read,
-        $.raw_string,
-        $.raw_value,
       ),
 
-    // ( expr* ) — quotation (anonymous code block)
-    quotation: ($) => seq('(', repeat($._expr), ')'),
+    literal: ($) =>
+      choice(
+        $.string_literal,
+        $.regexp_literal,
+        $.bigint_literal,
+        $.num_literal,
+        $.bool_literal,
+        $.nil_literal,
+      ),
 
-    // [ item* ] — list literal (raw values only)
-    list_literal: ($) => seq('[', repeat($._list_item), ']'),
-    _list_item: ($) => choice($.raw_string, $.raw_value),
+    nil_literal: ($) => 'nil',
+    bool_literal: ($) => choice('true', 'false'),
 
-    // All-caps identifiers (builtins: DUP, SWAP, DIP, etc.)
-    // Any [A-Z][A-Z0-9_]* — typecheck rejects unknown ones.
-    builtin_word: ($) => token(/[A-Z][A-Z0-9_]*/),
+    bigint_literal: ($) =>
+      token(/([0-9][0-9_]*|0[xX][0-9a-fA-F_]+)n/),
+
+    num_literal: ($) =>
+      token(
+        /[0-9][0-9_]*(\.[0-9_]+)?([eE][+-]?[0-9_]+)?|0[xX][0-9a-fA-F_]+|0[oO][0-7_]+|0[bB][01_]+/,
+      ),
+
+    string_literal: ($) =>
+      choice(
+        token(seq('"', repeat(choice(/[^"\\\n]+/, /\\./)), '"')),
+        token(seq("'", repeat(choice(/[^'\\\n]+/, /\\./)), "'")),
+      ),
+
+    regexp_literal: ($) => token(/\/([^/\\\n]|\\.)+\/[gimsuy]*/),
+
+    builtin_word: ($) => token(prec(-1, /[a-z][a-zA-Z0-9_]*/)),
+
+    slot_write: ($) => seq(':', field('name', $.field_name)),
+    slot_read: ($) => seq(';', field('name', $.field_name)),
   },
 })
