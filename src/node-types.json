@@ -5,6 +5,70 @@
     "fields": {}
   },
   {
+    "type": "case",
+    "named": true,
+    "fields": {
+      "def": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "case_def",
+            "named": true
+          }
+        ]
+      },
+      "doc": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "dict_type_expr",
+          "named": true
+        },
+        {
+          "type": "generic_type_expr",
+          "named": true
+        },
+        {
+          "type": "list_type_expr",
+          "named": true
+        },
+        {
+          "type": "map_type_expr",
+          "named": true
+        },
+        {
+          "type": "module_type_ref",
+          "named": true
+        },
+        {
+          "type": "set_type_expr",
+          "named": true
+        },
+        {
+          "type": "type_name",
+          "named": true
+        },
+        {
+          "type": "type_var",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "comment",
     "named": true,
     "fields": {},
@@ -17,6 +81,22 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "data_type",
+    "named": true,
+    "fields": {
+      "def": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_def",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -48,6 +128,10 @@
           "named": true
         },
         {
+          "type": "set_type_expr",
+          "named": true
+        },
+        {
           "type": "type_name",
           "named": true
         },
@@ -59,7 +143,90 @@
     }
   },
   {
-    "type": "field_name",
+    "type": "effects",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "effect_add",
+          "named": true
+        },
+        {
+          "type": "effect_remove",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "field",
+    "named": true,
+    "fields": {
+      "def": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "field_def",
+            "named": true
+          }
+        ]
+      },
+      "doc": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "comment",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "dict_type_expr",
+          "named": true
+        },
+        {
+          "type": "generic_type_expr",
+          "named": true
+        },
+        {
+          "type": "list_type_expr",
+          "named": true
+        },
+        {
+          "type": "map_type_expr",
+          "named": true
+        },
+        {
+          "type": "module_type_ref",
+          "named": true
+        },
+        {
+          "type": "set_type_expr",
+          "named": true
+        },
+        {
+          "type": "type_name",
+          "named": true
+        },
+        {
+          "type": "type_var",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "field_def",
     "named": true,
     "fields": {}
   },
@@ -92,47 +259,11 @@
           "named": true
         },
         {
-          "type": "type_name",
+          "type": "set_type_expr",
           "named": true
         },
         {
-          "type": "type_var",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "group",
-    "named": true,
-    "fields": {
-      "def": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "group_def",
-            "named": true
-          }
-        ]
-      },
-      "doc": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "comment",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "tag",
+          "type": "type_name",
           "named": true
         },
         {
@@ -156,12 +287,12 @@
           }
         ]
       },
-      "path": {
+      "source": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "path",
+            "type": "import_source",
             "named": true
           }
         ]
@@ -187,11 +318,30 @@
       "required": true,
       "types": [
         {
-          "type": "type_import_item",
+          "type": "type_name",
           "named": true
         },
         {
-          "type": "word_import_item",
+          "type": "word_name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "import_source",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "file_path",
+          "named": true
+        },
+        {
+          "type": "npm_package",
           "named": true
         }
       ]
@@ -238,6 +388,10 @@
         },
         {
           "type": "module_type_ref",
+          "named": true
+        },
+        {
+          "type": "set_type_expr",
           "named": true
         },
         {
@@ -315,6 +469,10 @@
           "named": true
         },
         {
+          "type": "set_type_expr",
+          "named": true
+        },
+        {
           "type": "type_name",
           "named": true
         },
@@ -334,71 +492,11 @@
       "required": true,
       "types": [
         {
-          "type": "ident",
+          "type": "quotation_name",
           "named": true
         },
         {
           "type": "quotation_sig",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "product_field",
-    "named": true,
-    "fields": {
-      "doc": {
-        "multiple": false,
-        "required": false,
-        "types": [
-          {
-            "type": "comment",
-            "named": true
-          }
-        ]
-      },
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "field_name",
-            "named": true
-          }
-        ]
-      }
-    },
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "dict_type_expr",
-          "named": true
-        },
-        {
-          "type": "generic_type_expr",
-          "named": true
-        },
-        {
-          "type": "list_type_expr",
-          "named": true
-        },
-        {
-          "type": "map_type_expr",
-          "named": true
-        },
-        {
-          "type": "module_type_ref",
-          "named": true
-        },
-        {
-          "type": "type_name",
-          "named": true
-        },
-        {
-          "type": "type_var",
           "named": true
         }
       ]
@@ -413,7 +511,7 @@
         "required": true,
         "types": [
           {
-            "type": "group_def",
+            "type": "type_def",
             "named": true
           }
         ]
@@ -434,7 +532,7 @@
       "required": true,
       "types": [
         {
-          "type": "product_field",
+          "type": "field",
           "named": true
         },
         {
@@ -500,11 +598,27 @@
       "required": true,
       "types": [
         {
-          "type": "effect_add",
+          "type": "dict_type_expr",
           "named": true
         },
         {
-          "type": "effect_remove",
+          "type": "effects",
+          "named": true
+        },
+        {
+          "type": "generic_type_expr",
+          "named": true
+        },
+        {
+          "type": "list_type_expr",
+          "named": true
+        },
+        {
+          "type": "map_type_expr",
+          "named": true
+        },
+        {
+          "type": "module_type_ref",
           "named": true
         },
         {
@@ -516,22 +630,30 @@
           "named": true
         },
         {
+          "type": "set_type_expr",
+          "named": true
+        },
+        {
           "type": "sig_arrow",
           "named": true
         },
         {
-          "type": "sig_type_expr",
+          "type": "stack_var",
           "named": true
         },
         {
-          "type": "stack_var",
+          "type": "type_name",
+          "named": true
+        },
+        {
+          "type": "type_var",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "sig_type_expr",
+    "type": "set_type_expr",
     "named": true,
     "fields": {},
     "children": {
@@ -559,6 +681,10 @@
           "named": true
         },
         {
+          "type": "set_type_expr",
+          "named": true
+        },
+        {
           "type": "type_name",
           "named": true
         },
@@ -578,11 +704,27 @@
       "required": true,
       "types": [
         {
-          "type": "effect_add",
+          "type": "dict_type_expr",
           "named": true
         },
         {
-          "type": "effect_remove",
+          "type": "effects",
+          "named": true
+        },
+        {
+          "type": "generic_type_expr",
+          "named": true
+        },
+        {
+          "type": "list_type_expr",
+          "named": true
+        },
+        {
+          "type": "map_type_expr",
+          "named": true
+        },
+        {
+          "type": "module_type_ref",
           "named": true
         },
         {
@@ -594,51 +736,32 @@
           "named": true
         },
         {
+          "type": "set_type_expr",
+          "named": true
+        },
+        {
           "type": "sig_arrow",
           "named": true
         },
         {
-          "type": "sig_type_expr",
+          "type": "stack_var",
           "named": true
         },
         {
-          "type": "stack_var",
+          "type": "type_name",
+          "named": true
+        },
+        {
+          "type": "type_var",
           "named": true
         }
       ]
     }
   },
   {
-    "type": "slot_read",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "field_name",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
     "type": "slot_write",
     "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "field_name",
-            "named": true
-          }
-        ]
-      }
-    }
+    "fields": {}
   },
   {
     "type": "source_file",
@@ -654,15 +777,11 @@
           "named": true
         },
         {
-          "type": "group",
-          "named": true
-        },
-        {
           "type": "import",
           "named": true
         },
         {
-          "type": "product_type",
+          "type": "type",
           "named": true
         },
         {
@@ -678,7 +797,7 @@
     "fields": {}
   },
   {
-    "type": "tag",
+    "type": "sum_type",
     "named": true,
     "fields": {
       "def": {
@@ -686,7 +805,7 @@
         "required": true,
         "types": [
           {
-            "type": "tag_name",
+            "type": "type_def",
             "named": true
           }
         ]
@@ -700,81 +819,45 @@
             "named": true
           }
         ]
-      },
-      "payload": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "(",
-            "named": false
-          },
-          {
-            "type": ")",
-            "named": false
-          },
-          {
-            "type": "dict_type_expr",
-            "named": true
-          },
-          {
-            "type": "generic_type_expr",
-            "named": true
-          },
-          {
-            "type": "list_type_expr",
-            "named": true
-          },
-          {
-            "type": "map_type_expr",
-            "named": true
-          },
-          {
-            "type": "module_type_ref",
-            "named": true
-          },
-          {
-            "type": "type_name",
-            "named": true
-          },
-          {
-            "type": "type_var",
-            "named": true
-          }
-        ]
       }
+    },
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "case",
+          "named": true
+        },
+        {
+          "type": "type_var",
+          "named": true
+        }
+      ]
     }
   },
   {
-    "type": "tag_name",
+    "type": "type",
     "named": true,
-    "fields": {}
-  },
-  {
-    "type": "type_import_item",
-    "named": true,
-    "fields": {
-      "type": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "type_name",
-            "named": true
-          }
-        ]
-      }
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "data_type",
+          "named": true
+        },
+        {
+          "type": "product_type",
+          "named": true
+        },
+        {
+          "type": "sum_type",
+          "named": true
+        }
+      ]
     }
-  },
-  {
-    "type": "type_name",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "type_var",
-    "named": true,
-    "fields": {}
   },
   {
     "type": "word",
@@ -855,31 +938,6 @@
     }
   },
   {
-    "type": "word_import_item",
-    "named": true,
-    "fields": {
-      "name": {
-        "multiple": false,
-        "required": true,
-        "types": [
-          {
-            "type": "word_name",
-            "named": true
-          }
-        ]
-      }
-    }
-  },
-  {
-    "type": "word_name",
-    "named": true,
-    "fields": {}
-  },
-  {
-    "type": "&",
-    "named": false
-  },
-  {
     "type": "(",
     "named": false
   },
@@ -892,18 +950,6 @@
     "named": false
   },
   {
-    "type": ":",
-    "named": false
-  },
-  {
-    "type": ";",
-    "named": false
-  },
-  {
-    "type": "@",
-    "named": false
-  },
-  {
     "type": "Dict",
     "named": false
   },
@@ -913,6 +959,10 @@
   },
   {
     "type": "Map",
+    "named": false
+  },
+  {
+    "type": "Set",
     "named": false
   },
   {
@@ -932,6 +982,10 @@
     "named": true
   },
   {
+    "type": "case_def",
+    "named": true
+  },
+  {
     "type": "comment_content",
     "named": true
   },
@@ -948,11 +1002,7 @@
     "named": false
   },
   {
-    "type": "group_def",
-    "named": true
-  },
-  {
-    "type": "ident",
+    "type": "file_path",
     "named": true
   },
   {
@@ -972,11 +1022,15 @@
     "named": true
   },
   {
+    "type": "npm_package",
+    "named": true
+  },
+  {
     "type": "num_literal",
     "named": true
   },
   {
-    "type": "path",
+    "type": "quotation_name",
     "named": true
   },
   {
@@ -988,6 +1042,10 @@
     "named": true
   },
   {
+    "type": "slot_read",
+    "named": true
+  },
+  {
     "type": "stack_var",
     "named": true
   },
@@ -996,15 +1054,27 @@
     "named": false
   },
   {
+    "type": "type_def",
+    "named": true
+  },
+  {
+    "type": "type_name",
+    "named": true
+  },
+  {
+    "type": "type_var",
+    "named": true
+  },
+  {
     "type": "word_def",
+    "named": true
+  },
+  {
+    "type": "word_name",
     "named": true
   },
   {
     "type": "word_ref",
     "named": true
-  },
-  {
-    "type": "|",
-    "named": false
   }
 ]

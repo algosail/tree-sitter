@@ -2,25 +2,26 @@
 (module_def) @namespace
 (module_type_ref) @type
 (module_word_ref) @function.call
-(path) @string.special
+(file_path) @string.special
+(npm_package) @string.special
 
-; ADT
-(group_def) @type
-(tag_name) @constructor
-
-; Product types
-(field_name) @property
+; Type definitions
+(type_def) @type.definition
+(case_def) @constructor
+(field_def) @property
 
 ; Words
 (word_def) @function
 (word_ref) @function.call
 
-; Types in signatures
+; Type expressions
 (type_name) @type
 (type_var) @variable.parameter
 
 ; Signatures
 (sig_arrow) @operator
+(stack_var) @variable.parameter
+(quotation_name) @label
 
 ; Effects
 (effect_add) @attribute
@@ -30,7 +31,7 @@
 (slot_write) @variable
 (slot_read) @variable
 
-; Builtins (lowercase bare words, RFC-0.1)
+; Builtins (lowercase bare words)
 (builtin_word) @keyword.function
 
 ; Literals
@@ -40,9 +41,6 @@
 (bool_literal) @constant.builtin
 (nil_literal) @constant.builtin
 (regexp_literal) @string.regexp
-
-; Identifiers in named quotation sigs
-(ident) @variable.special
 
 ; Comments
 (comment) @comment
